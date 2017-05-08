@@ -61,7 +61,7 @@ public class RayTracer {
 		}
 
 
-	}
+	} // ens of main 
 
 	/**
 	 * Parses the scene file and creates the scene. Change this function so it generates the required objects.
