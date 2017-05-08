@@ -16,10 +16,10 @@ import javax.imageio.ImageIO;
  *  Main class for ray tracing exercise.
  */
 public class RayTracer {
-
 	public int imageWidth;
 	public int imageHeight;
-
+	public int cnt_mtl = 0, cnt_pln = 0 ,cnt_sph = 0 ,cnt_lgt = 0;
+	
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
 	 */
@@ -44,7 +44,6 @@ public class RayTracer {
 				tracer.imageHeight = Integer.parseInt(args[3]);
 			}
 
-
 			// Parse scene file:
 			tracer.parseScene(sceneFileName);
 
@@ -58,8 +57,6 @@ public class RayTracer {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-
-
 	} // end of main 
 
 	/**
@@ -73,8 +70,6 @@ public class RayTracer {
 		String line = null;
 		int lineNum = 0;
 		System.out.println("Started parsing scene file " + sceneFileName);
-
-
 
 		while ((line = r.readLine()) != null)
 		{
@@ -112,17 +107,19 @@ public class RayTracer {
 				{
 
 					MySet set = new MySet();
-					set.setBgr(Integer.parseInt(params[0])); //R background color
-					set.setBgg(Integer.parseInt(params[1])); //G background color
-					set.setBgb(Integer.parseInt(params[2])); //B background color
-					set.setSh_rays(Integer.parseInt(params[3])); //root number of shadow rays
-					set.setRec_max(Integer.parseInt(params[4])); //maximum recursion
-					set.setSS(Integer.parseInt(params[5])); //super sampling level
+					set.setBgr(Integer.parseInt(params[0]));		//R background color.
+					set.setBgg(Integer.parseInt(params[1])); 		//G background color.
+					set.setBgb(Integer.parseInt(params[2])); 		//B background color.
+					set.setSh_rays(Integer.parseInt(params[3])); 	//root number of shadow rays.
+					set.setRec_max(Integer.parseInt(params[4])); 	//maximum recursion.
+					set.setSS(Integer.parseInt(params[5])); 		//super sampling level.
 					System.out.println(String.format("Parsed general settings (line %d)", lineNum));
 				}
 				else if (code.equals("mtl"))
 				{
 					Material mat = new Material();
+					mat.setIndex(cnt_mtl);
+					cnt_mtl++;
 					mat.setDr(Double.parseDouble(params[0]));                    
 					mat.setDg(Double.parseDouble(params[1]));
 					mat.setDb(Double.parseDouble(params[2]));
@@ -141,8 +138,8 @@ public class RayTracer {
 				{
 					// Add code here to parse sphere parameters
 					Sphere sphere = new Sphere();
-					//sphere.num = i;
-					//i++;
+					sphere.setIndex(cnt_sph);
+					cnt_sph++;
 					sphere.setCx(Integer.parseInt(params[0])); 		// sphere center x
 					sphere.setCy(Integer.parseInt(params[1]));		// sphere center y
 					sphere.setCz(Integer.parseInt(params[2]));		// sphere center z
@@ -153,6 +150,8 @@ public class RayTracer {
 				else if (code.equals("pln")) {
 
 					Plane pln = new Plane();
+					pln.setIndex(cnt_pln);
+					cnt_pln++;
 					pln.setNx(Integer.parseInt(params[0]));                    
 					pln.setNy(Integer.parseInt(params[1]));
 					pln.setNz(Integer.parseInt(params[2]));
@@ -164,8 +163,10 @@ public class RayTracer {
 				}
 				else if (code.equals("trg"))
 				{
-
+					
 					Triangle trg = new Triangle();
+					trg.setMat_idx(cnt_mtl);
+					cnt_mtl++;
 					trg.setP0x(Double.parseDouble(params[0]));                
 					trg.setP0y(Double.parseDouble(params[1]));
 					trg.setP0z(Double.parseDouble(params[2]));
@@ -181,7 +182,10 @@ public class RayTracer {
 				}
 				else if (code.equals("lgt"))
 				{
+					
 					Light lict  = new Light();
+					lict.setIndex(cnt_lgt);
+					cnt_lgt++;
 					lict.setPx(Integer.parseInt(params[0])); 		// position x
 					lict.setPy(Integer.parseInt(params[1])); 		// position y
 					lict.setPz(Integer.parseInt(params[2])); 		// position z

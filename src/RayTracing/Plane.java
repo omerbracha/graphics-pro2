@@ -4,7 +4,20 @@ public class Plane {
 	public int nx, ny, nz; //normal
 	public int offset; //offset
 	public int mat_idx; //material index
+	public int index;
 	
+	/**
+	 * @return the index
+	 */
+	public int getIndex() {
+		return index;
+	}
+	/**
+	 * @param index the index to set
+	 */
+	public void setIndex(int index) {
+		this.index = index;
+	}
 	public int getNx() {
 		return nx;
 	}

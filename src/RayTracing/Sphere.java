@@ -4,6 +4,19 @@ public class Sphere {
 	public int cx, cy, cz; 	// center positions 
 	public int radius; 		// radius
 	public int mat_idx;		// material index.
+	public int index;
+	/**
+	 * @return the index
+	 */
+	public int getIndex() {
+		return index;
+	}
+	/**
+	 * @param index the index to set
+	 */
+	public void setIndex(int index) {
+		this.index = index;
+	}
 	/**
 	 * @return the cx
 	 */

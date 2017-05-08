@@ -7,6 +7,19 @@ public class Camera {
 	public int uvX, uvY, uvZ; 	// up vector
 	public double sc_dist; 		// screen distance from camera 
 	public int sw_from_cam;		// screen width from camera
+	public int index;
+	/**
+	 * @return the index
+	 */
+	public int getIndex() {
+		return index;
+	}
+	/**
+	 * @param index the index to set
+	 */
+	public void setIndex(int index) {
+		this.index = index;
+	}
 	/**
 	 * @return the pX
 	 */

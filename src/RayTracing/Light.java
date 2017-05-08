@@ -11,7 +11,20 @@ public class Light {
 	public int spec;	// specular intensity
 	public double shadow;// shadow intensity
 	public int width;	//light width / radius (used for soft shadows)
+	public int index;
 	
+	/**
+	 * @return the index
+	 */
+	public int getIndex() {
+		return index;
+	}
+	/**
+	 * @param index the index to set
+	 */
+	public void setIndex(int index) {
+		this.index = index;
+	}
 	/**
 	 * @return the px
 	 */

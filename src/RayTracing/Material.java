@@ -6,7 +6,20 @@ public class Material {
 	public double rr, rg, rb; //reflection color
 	public int phong; //phong specularity
 	public double trans; //transparency value;
+	public int index;
 	
+	/**
+	 * @return the index
+	 */
+	public int getIndex() {
+		return index;
+	}
+	/**
+	 * @param index the index to set
+	 */
+	public void setIndex(int index) {
+		this.index = index;
+	}
 	public double getDr() {
 		return dr;
 	}
