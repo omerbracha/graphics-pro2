@@ -32,7 +32,6 @@ public class RayTracer {
                         // Default values:
 			tracer.imageWidth = 500;
 			tracer.imageHeight = 500;
-
 			if (args.length < 2)
 				throw new RayTracerException("Not enough arguments provided. Please specify an input scene file and an output image file for rendering.");
 
@@ -61,7 +60,7 @@ public class RayTracer {
 		}
 
 
-	} // ens of main 
+	} // end of main 
 
 	/**
 	 * Parses the scene file and creates the scene. Change this function so it generates the required objects.
