@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
  *  Main class for ray tracing exercise.
  */
 public class RayTracer {
-	
+
 	public int imageWidth;
 	public int imageHeight;
 
@@ -110,13 +110,30 @@ public class RayTracer {
 				}
 				else if (code.equals("set"))
 				{
-					// Add code here to parse general settings parameters
 
+					MySet set = new MySet();
+					set.setBgr(Integer.parseInt(params[0])); //R background color
+					set.setBgg(Integer.parseInt(params[1])); //G background color
+					set.setBgb(Integer.parseInt(params[2])); //B background color
+					set.setSh_rays(Integer.parseInt(params[3])); //root number of shadow rays
+					set.setRec_max(Integer.parseInt(params[4])); //maximum recursion
+					set.setSS(Integer.parseInt(params[5])); //super sampling level
 					System.out.println(String.format("Parsed general settings (line %d)", lineNum));
 				}
 				else if (code.equals("mtl"))
 				{
-					// Add code here to parse material parameters
+					Material mat = new Material();
+					mat.setDr(Double.parseDouble(params[0]));                    
+					mat.setDg(Double.parseDouble(params[1]));
+					mat.setDb(Double.parseDouble(params[2]));
+					mat.setSr(Double.parseDouble(params[3]));
+					mat.setSg(Double.parseDouble(params[4]));
+					mat.setSb(Double.parseDouble(params[5]));
+					mat.setRr(Double.parseDouble(params[6]));
+					mat.setRg(Double.parseDouble(params[7]));
+					mat.setRb(Double.parseDouble(params[8]));
+					mat.setPhong(Integer.parseInt(params[9]));
+					mat.setTrans(Double.parseDouble(params[10]));
 
 					System.out.println(String.format("Parsed material (line %d)", lineNum));
 				}
@@ -133,15 +150,32 @@ public class RayTracer {
 					sphere.setMat_idx(Integer.parseInt(params[4]));	// material index number
 					System.out.println(String.format("Parsed sphere (line %d)", lineNum));
 				}
-				else if (code.equals("pln"))
-				{
-					// Add code here to parse plane parameters
+				else if (code.equals("pln")) {
+
+					Plane pln = new Plane();
+					pln.setNx(Integer.parseInt(params[0]));                    
+					pln.setNy(Integer.parseInt(params[1]));
+					pln.setNz(Integer.parseInt(params[2]));
+					pln.setOffset(Integer.parseInt(params[3]));
+					pln.setMat_idx(Integer.parseInt(params[4]));
+
 
 					System.out.println(String.format("Parsed plane (line %d)", lineNum));
 				}
 				else if (code.equals("trg"))
 				{
-					// Add code here to parse cylinder parameters
+
+					Triangle trg = new Triangle();
+					trg.setP0x(Double.parseDouble(params[0]));                
+					trg.setP0y(Double.parseDouble(params[1]));
+					trg.setP0z(Double.parseDouble(params[2]));
+					trg.setP1x(Double.parseDouble(params[3]));
+					trg.setP1y(Double.parseDouble(params[4]));
+					trg.setP1z(Double.parseDouble(params[5]));
+					trg.setP2x(Double.parseDouble(params[6]));
+					trg.setP2y(Double.parseDouble(params[7]));
+					trg.setP2z(Double.parseDouble(params[8]));
+					trg.setMat_idx(Integer.parseInt(params[9]));
 
 					System.out.println(String.format("Parsed cylinder (line %d)", lineNum));
 				}
@@ -157,8 +191,7 @@ public class RayTracer {
 					lict.setSpec(Integer.parseInt(params[6]));		// specular
 					lict.setShadow(Double.parseDouble(params[7]));	// shadow
 					lict.setWidth(Integer.parseInt(params[8]));		// width
-					
-					
+
 					System.out.println(String.format("Parsed light (line %d)", lineNum));
 				}
 				else
