@@ -1,6 +1,6 @@
 package RayTracing;
 
-public class Sphere {
+public class Sphere extends Shape{
 	//TODO check xyz int or double
 	public int cx, cy, cz; 	// center positions 
 	public int radius; 		// radius
@@ -77,6 +77,9 @@ public class Sphere {
 	 */
 	public void setMat_idx(int mat_idx) {
 		this.mat_idx = mat_idx;
+	}
+	public Vector getPos() {
+		return new Vector(getCx(), getCy(), getCz());
 	}
 	
 	

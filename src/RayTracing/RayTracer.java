@@ -12,6 +12,9 @@ import java.util.List;
 // import javafx.scene.shape.Sphere;
 import javax.imageio.ImageIO;
 
+import com.sun.glass.ui.Screen;
+import com.sun.glass.ui.Size;
+
 /**
  *  Main class for ray tracing exercise.
  */
@@ -21,7 +24,7 @@ public class RayTracer {
 	public int imageHeight;
 	public int cnt_mtl = 0, cnt_pln = 0 ,cnt_sph = 0 ,cnt_lgt = 0;
 	public Scene scene = new Scene();
-	private int[][][] screen; //TODO- change int? 
+	private double[][][] screen; //TODO- change int? 
 	
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
@@ -54,14 +57,26 @@ public class RayTracer {
 			}
 			
 			//Create screen:
-			tracer.screen = new int[tracer.imageWidth][tracer.imageHeight][3];
+			tracer.screen = new double[tracer.imageWidth][tracer.imageHeight][3];
 
 			// Parse scene file:
 			tracer.parseScene(sceneFileName);
 			
 			// Render scene:
 			tracer.renderScene(outputFileName);
-
+			int weight = tracer.imageWidth;
+			int height = tracer.imageHeight;
+			byte[] rgbData = new byte[weight * height * 3];
+			int p = 0;
+			for (int i = 0; i < rgbData.length; i++) {
+				for (int j = 0; j < rgbData.length; j++) {
+					for (int k = 0; k < 3; k++) {
+						rgbData[p] = (byte) tracer.screen[i][j][k];
+						p++;
+					}
+				}
+			}
+			saveImage(tracer.imageWidth, rgbData, outputFileName);
 			//		} catch (IOException e) {
 			//			System.out.println(e.getMessage());
 		} catch (RayTracerException e) {
@@ -148,7 +163,9 @@ public class RayTracer {
 					mat.setRb(Double.parseDouble(params[8]));
 					mat.setPhong(Integer.parseInt(params[9]));
 					mat.setTrans(Double.parseDouble(params[10]));
-
+					
+					scene.setMaterial(mat);
+					
 					System.out.println(String.format("Parsed material (line %d)", lineNum));
 				}
 				else if (code.equals("sph"))
@@ -287,14 +304,14 @@ public class RayTracer {
 	
 	
 	//////////////////////// Utilities functions //////////////////////////////
-	private int[] getColorForPix(int XaxisNum, int YaxisNum) {
+	private double[] getColorForPix(int XaxisNum, int YaxisNum) {
 		int red = 0, green = 0,blue = 0;
-		int[] ans = new int[3]; 
+		double[] ans = new double[3]; 
 		int size = scene.getMySet().getSS();
-		int[][][] superSampleMatrix = new int[size][size][3];
+		double[][][] superSampleMatrix = new double[size][size][3];
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				superSampleMatrix[i][j] = sampleColorByRay(XaxisNum, YaxisNum,i ,j);
+				superSampleMatrix[i][j] =  sampleColorByRay(XaxisNum, YaxisNum,i ,j);
 				red += superSampleMatrix[i][j][0];		// sum red
 				green += superSampleMatrix[i][j][1];	// sum green
 				blue += superSampleMatrix[i][j][2];		// sum blue
@@ -308,6 +325,26 @@ public class RayTracer {
 	}
 
 
+
+	private double[] sampleColorByRay(int xaxisNum, int yaxisNum, int i, int j) {
+		double t = 0;
+		double red,green,blue;
+		Sphere sphere = new Sphere(); //TODO
+		Ray ray = new Ray(this,xaxisNum,yaxisNum, i, j);
+		for (Sphere sph : this.scene.getSpheres()) {
+			if((t = ray.inter(sph)) > 0 ){
+				if (t < ray.t ) {
+					ray.t = t;
+					sphere = sph;
+				}
+			}
+		} //for		
+		red = this.scene.materials.get(sphere.getMat_idx() -1 ).getDr();
+		green = this.scene.materials.get(sphere.getMat_idx() -1 ).getDg();
+		blue = this.scene.materials.get(sphere.getMat_idx() -1 ).getDb();
+		double [] ans = {red , green, blue};
+		return ans;
+	}
 
 	//////////////////////// FUNCTIONS TO SAVE IMAGES IN PNG FORMAT //////////////////////////////////////////
 

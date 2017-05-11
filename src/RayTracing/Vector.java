@@ -37,6 +37,14 @@ public class Vector {
 		return vec;
 	}
 	
+	public Vector sub(Vector other) {
+		Vector vec = new Vector();
+		vec.x = this.x - other.x;
+		vec.y = this.y - other.y;
+		vec.z = this.z - other.z;
+		return vec;
+	}
+	
 	public void mult(int i) {
 		this.x = this.x*i;
 		this.y = this.y*i;

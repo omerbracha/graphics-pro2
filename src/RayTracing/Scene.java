@@ -9,7 +9,7 @@ public class Scene {
 	public ArrayList<Triangle> triangles;
 	public ArrayList<Light> lights;
 	public ArrayList<Plane> planes;
-	
+	public ArrayList<Material> materials;
 	public Scene() {
 		super();
 		this.mySet = null;
@@ -18,6 +18,7 @@ public class Scene {
 		this.triangles = new ArrayList<Triangle>();
 		this.lights = new ArrayList<Light>();
 		this.planes = new ArrayList<Plane>();
+		this.materials = new ArrayList<Material>();
 	}
 
 	/**
@@ -74,6 +75,17 @@ public class Scene {
 	 */
 	public ArrayList<Plane> getPlanes() {
 		return planes;
+	}
+
+	public void setMaterial(Material mat) {
+		this.materials.add(mat);
+	}
+
+	/**
+	 * @return the materials
+	 */
+	public ArrayList<Material> getMaterials() {
+		return materials;
 	}
 	
 	
