@@ -21,6 +21,8 @@ public class RayTracer {
 	public int imageHeight;
 	public int cnt_mtl = 0, cnt_pln = 0 ,cnt_sph = 0 ,cnt_lgt = 0;
 	public Scene scene = new Scene();
+	private int[][][] screen; //TODO- change int? 
+	
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
 	 */
@@ -50,6 +52,9 @@ public class RayTracer {
 				tracer.imageWidth = Integer.parseInt(args[2]);
 				tracer.imageHeight = Integer.parseInt(args[3]);
 			}
+			
+			//Create screen:
+			tracer.screen = new int[tracer.imageWidth][tracer.imageHeight][3];
 
 			// Parse scene file:
 			tracer.parseScene(sceneFileName);
@@ -244,7 +249,6 @@ public class RayTracer {
 		// Create a byte array to hold the pixel data:
 		byte[] rgbData = new byte[this.imageWidth * this.imageHeight * 3];
 
-
 		// Put your ray tracing code here!
 		//
 		// Write pixel color values in RGB format to rgbData:
@@ -253,8 +257,19 @@ public class RayTracer {
 		//             blue component is in rgbData[(y * this.imageWidth + x) * 3 + 2]
 		//
 		// Each of the red, green and blue components should be a byte, i.e. 0-255
-
-
+		
+		for (int i = 0; i < imageWidth; i++) {				// run over x axis
+			for (int j = 0; j < imageHeight; j++) {			// run over y axis
+				this.screen[i][j] = getColorForPix(i,j);
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
 		long endTime = System.currentTimeMillis();
 		Long renderTime = endTime - startTime;
 
@@ -268,11 +283,34 @@ public class RayTracer {
 		System.out.println("Saved file " + outputFileName);
 
 	}
-
+	
+	
+	
+	//////////////////////// Utilities functions //////////////////////////////
+	private int[] getColorForPix(int XaxisNum, int YaxisNum) {
+		int red = 0, green = 0,blue = 0;
+		int[] ans = new int[3]; 
+		int size = scene.getMySet().getSS();
+		int[][][] superSampleMatrix = new int[size][size][3];
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				superSampleMatrix[i][j] = sampleColorByRay(XaxisNum, YaxisNum,i ,j);
+				red += superSampleMatrix[i][j][0];		// sum red
+				green += superSampleMatrix[i][j][1];	// sum green
+				blue += superSampleMatrix[i][j][2];		// sum blue
+			}
+		}
+		ans[0] = (int) (red /(size*size));				// add average color
+		ans[1] = (int) (green/(size*size));				// add average color
+		ans[2] = (int) (blue/(size*size));				// add average color
+				
+		return ans;
+	}
 
 
 
 	//////////////////////// FUNCTIONS TO SAVE IMAGES IN PNG FORMAT //////////////////////////////////////////
+
 
 	/*
 	 * Saves RGB data as an image in png format to the specified location.
@@ -311,4 +349,4 @@ public class RayTracer {
 	}
 
 
-}
+} // end of rayTrac
