@@ -4,7 +4,7 @@ public class Material {
 	public double dr, dg, db; //diffuse color
 	public double sr, sg, sb; //specular color
 	public double rr, rg, rb; //reflection color
-	public int phong; //phong specularity
+	public float phong; //phong specularity
 	public double trans; //transparency value;
 	public int index;
 	
@@ -74,7 +74,7 @@ public class Material {
 	public void setRb(double rb) {
 		this.rb = rb;
 	}
-	public int getPhong() {
+	public float getPhong() {
 		return phong;
 	}
 	public void setPhong(int phong) {

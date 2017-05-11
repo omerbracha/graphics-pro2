@@ -1,24 +1,24 @@
 package RayTracing;
 
 public class MySet {
-	public int bgr, bgg, bgb; //background colors
+	public double bgr, bgg, bgb; //background colors
 	public int sh_rays; //shadow rays
 	public int rec_max; //maximum recursion
 	public int SS; //super sampling
 	
-	public int getBgr() {
+	public double getBgr() {
 		return bgr;
 	}
 	public void setBgr(int bgr) {
 		this.bgr = bgr;
 	}
-	public int getBgg() {
+	public double getBgg() {
 		return bgg;
 	}
 	public void setBgg(int bgg) {
 		this.bgg = bgg;
 	}
-	public int getBgb() {
+	public double getBgb() {
 		return bgb;
 	}
 	public void setBgb(int bgb) {

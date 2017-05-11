@@ -1,6 +1,7 @@
 package RayTracing;
 
 public class Plane {
+	//TODO check xyz int or double
 	public int nx, ny, nz; //normal
 	public int offset; //offset
 	public int mat_idx; //material index

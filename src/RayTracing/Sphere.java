@@ -1,6 +1,7 @@
 package RayTracing;
 
 public class Sphere {
+	//TODO check xyz int or double
 	public int cx, cy, cz; 	// center positions 
 	public int radius; 		// radius
 	public int mat_idx;		// material index.

@@ -1,10 +1,10 @@
 package RayTracing;
 
 public class Light {
-
-	public int px; 		//position of the light (x)
-	public int py;		//position of the light (y)
-	public int pz;		//position of the light (z)
+	public Vector position;
+//	public double px; 		//position of the light (x)
+//	public double py;		//position of the light (y)
+//	public double pz;		//position of the light (z)
 	public double r;	//light color (r)
 	public double g;	//light color (g)	
 	public double b;	//light color (b)
@@ -25,41 +25,29 @@ public class Light {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-	/**
-	 * @return the px
-	 */
-	public int getPx() {
-		return px;
+	public Vector getPosition() {
+		return position;
 	}
-	/**
-	 * @param px the px to set
-	 */
-	public void setPx(int px) {
-		this.px = px;
+	public void setPosition(Vector position) {
+		this.position = position;
 	}
-	/**
-	 * @return the py
-	 */
-	public int getPy() {
-		return py;
+	public double getPx() {
+		return position.x;
 	}
-	/**
-	 * @param py the py to set
-	 */
-	public void setPy(int py) {
-		this.py = py;
+	public void setPx(double px) {
+		this.position.x = px;
 	}
-	/**
-	 * @return the pz
-	 */
-	public int getPz() {
-		return pz;
+	public double getPy() {
+		return position.y;
 	}
-	/**
-	 * @param pz the pz to set
-	 */
-	public void setPz(int pz) {
-		this.pz = pz;
+	public void setPy(double py) {
+		this.position.y = py;
+	}
+	public double getPz() {
+		return position.z;
+	}
+	public void setPz(double pz) {
+		this.position.z = pz;
 	}
 	/**
 	 * @return the r

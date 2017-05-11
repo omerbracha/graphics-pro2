@@ -1,13 +1,34 @@
 package RayTracing;
 
 public class Camera {
-
-	public double pX, pY, pZ; 	// positions
-	public double laX, laY, laZ; // look at positions
-	public int uvX, uvY, uvZ; 	// up vector
+	
+	public Vector position, lookat, up;
+	//public double pX, pY, pZ; 	// positions
+	//public double laX, laY, laZ; // look at positions
+	//public int uvX, uvY, uvZ; 	// up vector
 	public double sc_dist; 		// screen distance from camera 
 	public int sw_from_cam;		// screen width from camera
 	public int index;
+	
+	
+	public Vector getPosition() {
+		return position;
+	}
+	public void setPosition(Vector position) {
+		this.position = position;
+	}
+	public Vector getLookat() {
+		return lookat;
+	}
+	public void setLookat(Vector lookat) {
+		this.lookat = lookat;
+	}
+	public Vector getUp() {
+		return up;
+	}
+	public void setUp(Vector up) {
+		this.up = up;
+	}
 	/**
 	 * @return the index
 	 */
@@ -24,109 +45,109 @@ public class Camera {
 	 * @return the pX
 	 */
 	public double getpX() {
-		return pX;
+		return position.x;
 	}
 	/**
 	 * @param pX the pX to set
 	 */
 	public void setpX(double pX) {
-		this.pX = pX;
+		this.position.x = pX;
 	}
 	/**
 	 * @return the pY
 	 */
 	public double getpY() {
-		return pY;
+		return position.y;
 	}
 	/**
 	 * @param pY the pY to set
 	 */
 	public void setpY(double pY) {
-		this.pY = pY;
+		this.position.y = pY;
 	}
 	/**
 	 * @return the pZ
 	 */
 	public double getpZ() {
-		return pZ;
+		return position.z;
 	}
 	/**
 	 * @param pZ the pZ to set
 	 */
 	public void setpZ(double pZ) {
-		this.pZ = pZ;
+		this.position.z = pZ;
 	}
 	/**
 	 * @return the laX
 	 */
 	public double getLaX() {
-		return laX;
+		return lookat.x;
 	}
 	/**
 	 * @param laX the laX to set
 	 */
 	public void setLaX(double laX) {
-		this.laX = laX;
+		this.lookat.x = laX;
 	}
 	/**
 	 * @return the laY
 	 */
 	public double getLaY() {
-		return laY;
+		return lookat.y;
 	}
 	/**
 	 * @param laY the laY to set
 	 */
 	public void setLaY(double laY) {
-		this.laY = laY;
+		this.lookat.y = laY;
 	}
 	/**
 	 * @return the laZ
 	 */
 	public double getLaZ() {
-		return laZ;
+		return lookat.z;
 	}
 	/**
 	 * @param laZ the laZ to set
 	 */
 	public void setLaZ(double laZ) {
-		this.laZ = laZ;
+		this.lookat.z = laZ;
 	}
 	/**
 	 * @return the uvX
 	 */
-	public int getUvX() {
-		return uvX;
+	public double getUvX() {
+		return up.x;
 	}
 	/**
 	 * @param uvX the uvX to set
 	 */
 	public void setUvX(int uvX) {
-		this.uvX = uvX;
+		this.up.x = uvX;
 	}
 	/**
 	 * @return the uvY
 	 */
-	public int getUvY() {
-		return uvY;
+	public double getUvY() {
+		return up.y;
 	}
 	/**
 	 * @param uvY the uvY to set
 	 */
 	public void setUvY(int uvY) {
-		this.uvY = uvY;
+		this.up.y = uvY;
 	}
 	/**
 	 * @return the uvZ
 	 */
-	public int getUvZ() {
-		return uvZ;
+	public double getUvZ() {
+		return up.z;
 	}
 	/**
 	 * @param uvZ the uvZ to set
 	 */
 	public void setUvZ(int uvZ) {
-		this.uvZ = uvZ;
+		this.up.z = uvZ;
 	}
 	/**
 	 * @return the sc_dist

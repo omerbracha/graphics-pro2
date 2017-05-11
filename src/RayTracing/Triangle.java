@@ -1,6 +1,7 @@
 package RayTracing;
 
 public class Triangle {
+	//TODO check xyz int or double
 	public double p0x, p0y, p0z; //position of vertex 1
 	public double p1x, p1y, p1z; //position of vertex 2
 	public double p2x, p2y, p2z; //position of vertex 3

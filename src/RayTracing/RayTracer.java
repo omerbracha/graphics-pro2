@@ -43,8 +43,8 @@ public class RayTracer {
 			
 			String sceneFileName = args[0];
 			String outputFileName = args[1];
-			
 
+			
 			if (args.length > 3)
 			{
 				tracer.imageWidth = Integer.parseInt(args[2]);
