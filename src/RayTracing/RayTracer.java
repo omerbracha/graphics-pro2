@@ -15,28 +15,35 @@ import javax.imageio.ImageIO;
 /**
  *  Main class for ray tracing exercise.
  */
+
 public class RayTracer {
 	public int imageWidth;
 	public int imageHeight;
 	public int cnt_mtl = 0, cnt_pln = 0 ,cnt_sph = 0 ,cnt_lgt = 0;
-	
+	public Scene scene = new Scene();
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
 	 */
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////            main                 /////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	public static void main(String[] args) {
 
 		try {
 
 			RayTracer tracer = new RayTracer();
-
+			
 			// Default values:
 			tracer.imageWidth = 500;
 			tracer.imageHeight = 500;
 			if (args.length < 2)
 				throw new RayTracerException("Not enough arguments provided. Please specify an input scene file and an output image file for rendering.");
-
+			
 			String sceneFileName = args[0];
 			String outputFileName = args[1];
+			
 
 			if (args.length > 3)
 			{
@@ -46,7 +53,7 @@ public class RayTracer {
 
 			// Parse scene file:
 			tracer.parseScene(sceneFileName);
-
+			
 			// Render scene:
 			tracer.renderScene(outputFileName);
 
@@ -65,7 +72,7 @@ public class RayTracer {
 	public void parseScene(String sceneFileName) throws IOException, RayTracerException
 	{
 		FileReader fr = new FileReader(sceneFileName);
-
+		
 		BufferedReader r = new BufferedReader(fr);
 		String line = null;
 		int lineNum = 0;
@@ -100,7 +107,9 @@ public class RayTracer {
 					cam.setUvZ(Integer.parseInt(params[8]));		// set up vector z
 					cam.setSc_dist(Double.parseDouble(params[9])); 	//set up distance from view 
 					cam.setSw_from_cam(Integer.parseInt(params[10]));//set up width from view
-
+					
+					scene.setCam(cam); 								// set camera to scene 
+					
 					System.out.println(String.format("Parsed camera parameters (line %d)", lineNum));
 				}
 				else if (code.equals("set"))
@@ -113,6 +122,9 @@ public class RayTracer {
 					set.setSh_rays(Integer.parseInt(params[3])); 	//root number of shadow rays.
 					set.setRec_max(Integer.parseInt(params[4])); 	//maximum recursion.
 					set.setSS(Integer.parseInt(params[5])); 		//super sampling level.
+					
+					scene.setMySet(set); 							// set the setting
+					
 					System.out.println(String.format("Parsed general settings (line %d)", lineNum));
 				}
 				else if (code.equals("mtl"))
@@ -145,6 +157,9 @@ public class RayTracer {
 					sphere.setCz(Integer.parseInt(params[2]));		// sphere center z
 					sphere.setRadius(Integer.parseInt(params[3])); 	// radius
 					sphere.setMat_idx(Integer.parseInt(params[4]));	// material index number
+					
+					scene.getSpheres().add(sphere); 				// add a sphere to the sphere list. 
+					
 					System.out.println(String.format("Parsed sphere (line %d)", lineNum));
 				}
 				else if (code.equals("pln")) {
@@ -157,8 +172,9 @@ public class RayTracer {
 					pln.setNz(Integer.parseInt(params[2]));
 					pln.setOffset(Integer.parseInt(params[3]));
 					pln.setMat_idx(Integer.parseInt(params[4]));
-
-
+					
+					scene.getPlanes().add(pln);						// add a plane to the pln list.
+					
 					System.out.println(String.format("Parsed plane (line %d)", lineNum));
 				}
 				else if (code.equals("trg"))
@@ -177,12 +193,13 @@ public class RayTracer {
 					trg.setP2y(Double.parseDouble(params[7]));
 					trg.setP2z(Double.parseDouble(params[8]));
 					trg.setMat_idx(Integer.parseInt(params[9]));
-
-					System.out.println(String.format("Parsed cylinder (line %d)", lineNum));
+					
+					scene.getTriangles().add(trg);
+					
+					System.out.println(String.format("Parsed cylinder (line %d)", lineNum)); //TODO 
 				}
 				else if (code.equals("lgt"))
 				{
-					
 					Light lict  = new Light();
 					lict.setIndex(cnt_lgt);
 					cnt_lgt++;
@@ -195,7 +212,9 @@ public class RayTracer {
 					lict.setSpec(Integer.parseInt(params[6]));		// specular
 					lict.setShadow(Double.parseDouble(params[7]));	// shadow
 					lict.setWidth(Integer.parseInt(params[8]));		// width
-
+					
+					scene.getLights().add(lict);
+					
 					System.out.println(String.format("Parsed light (line %d)", lineNum));
 				}
 				else
@@ -204,12 +223,15 @@ public class RayTracer {
 				}
 			}
 		}
-
+		
 		// It is recommended that you check here that the scene is valid,
 		// for example camera settings and all necessary materials were defined.
-
+		
+		if(scene.cam == null || scene.mySet == null){
+			System.err.println("no camera or set in file");
+		}
+		
 		System.out.println("Finished parsing scene file " + sceneFileName);
-
 	}
 
 	/**
