@@ -218,13 +218,13 @@ public class RayTracer {
 					Light lict  = new Light();
 					lict.setIndex(cnt_lgt);
 					cnt_lgt++;
-					lict.setPx(Integer.parseInt(params[0])); 		// position x
-					lict.setPy(Integer.parseInt(params[1])); 		// position y
-					lict.setPz(Integer.parseInt(params[2])); 		// position z
+					lict.setPx(Double.parseDouble(params[0])); 		// position x
+					lict.setPy(Double.parseDouble(params[1])); 		// position y
+					lict.setPz(Double.parseDouble(params[2])); 		// position z
 					lict.setR(Double.parseDouble(params[3])); 		// red
 					lict.setG(Double.parseDouble(params[4])); 		// green
 					lict.setB(Double.parseDouble(params[5])); 		// blue
-					lict.setSpec(Integer.parseInt(params[6]));		// specular
+					lict.setSpec(Double.parseDouble(params[6]));		// specular
 					lict.setShadow(Double.parseDouble(params[7]));	// shadow
 					lict.setWidth(Integer.parseInt(params[8]));		// width
 					

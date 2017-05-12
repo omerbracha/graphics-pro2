@@ -8,7 +8,7 @@ public class Light {
 	public double r;	//light color (r)
 	public double g;	//light color (g)	
 	public double b;	//light color (b)
-	public int spec;	// specular intensity
+	public double spec;	// specular intensity
 	public double shadow;// shadow intensity
 	public int width;	//light width / radius (used for soft shadows)
 	public int index;
@@ -103,13 +103,13 @@ public class Light {
 	/**
 	 * @return the spec
 	 */
-	public int getSpec() {
+	public double getSpec() {
 		return spec;
 	}
 	/**
 	 * @param spec the spec to set
 	 */
-	public void setSpec(int spec) {
+	public void setSpec(double spec) {
 		this.spec = spec;
 	}
 	/**
