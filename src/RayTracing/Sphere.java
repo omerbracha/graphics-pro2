@@ -2,8 +2,8 @@ package RayTracing;
 
 public class Sphere extends Shape{
 	//TODO check xyz int or double
-	public int cx, cy, cz; 	// center positions 
-	public int radius; 		// radius
+	public double cx, cy, cz; 	// center positions 
+	public double radius; 		// radius
 	public int mat_idx;		// material index.
 	public int index;
 	/**
@@ -21,49 +21,49 @@ public class Sphere extends Shape{
 	/**
 	 * @return the cx
 	 */
-	public int getCx() {
+	public double getCx() {
 		return cx;
 	}
 	/**
 	 * @param cx the cx to set
 	 */
-	public void setCx(int cx) {
+	public void setCx(double cx) {
 		this.cx = cx;
 	}
 	/**
 	 * @return the cy
 	 */
-	public int getCy() {
+	public double getCy() {
 		return cy;
 	}
 	/**
 	 * @param cy the cy to set
 	 */
-	public void setCy(int cy) {
+	public void setCy(double cy) {
 		this.cy = cy;
 	}
 	/**
 	 * @return the cz
 	 */
-	public int getCz() {
+	public double getCz() {
 		return cz;
 	}
 	/**
 	 * @param cz the cz to set
 	 */
-	public void setCz(int cz) {
+	public void setCz(double cz) {
 		this.cz = cz;
 	}
 	/**
 	 * @return the radius
 	 */
-	public int getRadius() {
+	public double getRadius() {
 		return radius;
 	}
 	/**
 	 * @param radius the radius to set
 	 */
-	public void setRadius(int radius) {
+	public void setRadius(double radius) {
 		this.radius = radius;
 	}
 	/**

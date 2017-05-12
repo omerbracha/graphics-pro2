@@ -162,10 +162,10 @@ public class RayTracer {
 					Sphere sphere = new Sphere();
 					sphere.setIndex(cnt_sph);
 					cnt_sph++;
-					sphere.setCx(Integer.parseInt(params[0])); 		// sphere center x
-					sphere.setCy(Integer.parseInt(params[1]));		// sphere center y
-					sphere.setCz(Integer.parseInt(params[2]));		// sphere center z
-					sphere.setRadius(Integer.parseInt(params[3])); 	// radius
+					sphere.setCx(Double.parseDouble(params[0])); 		// sphere center x
+					sphere.setCy(Double.parseDouble(params[1]));		// sphere center y
+					sphere.setCz(Double.parseDouble(params[2]));		// sphere center z
+					sphere.setRadius(Double.parseDouble(params[3])); 	// radius
 					sphere.setMat_idx(Integer.parseInt(params[4]));	// material index number
 					
 					scene.getSpheres().add(sphere); 				// add a sphere to the sphere list. 
@@ -326,7 +326,7 @@ public class RayTracer {
 	private double[] sampleColorByRay(int xaxisNum, int yaxisNum, int i, int j) {
 		double t = 0;
 		int flag = 0;
-		double red = 0,green = 0,blue = 0; // TODO - default value is white? Spouse to never happen that stays without change
+		double red = 255,green = 255,blue = 255; // TODO - default value is white? Spouse to never happen that stays without change
 		Sphere sphere = new Sphere(); //TODO
 		Ray ray = new Ray();
 		ray.cameraRay(this, xaxisNum, yaxisNum, i, j);
