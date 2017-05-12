@@ -328,7 +328,8 @@ public class RayTracer {
 		double t = 0;
 		double red,green,blue;
 		Sphere sphere = new Sphere(); //TODO
-		Ray ray = new Ray(this,xaxisNum,yaxisNum, i, j);
+		Ray ray = new Ray();
+		ray.cameraRay(this, xaxisNum, yaxisNum, i, j);
 		for (Sphere sph : this.scene.getSpheres()) {
 			if((t = ray.inter(sph)) > 0 ){
 				if (t < ray.t ) {

@@ -11,10 +11,41 @@ public class Ray {
 		this.p0 = p0;
 		this.v = v;
 	}
+	
+	public Ray() {
+		this(0, new Vector(), new Vector());
+	}
+	
+	
 
-	public Ray(RayTracer tracer, int xaxisNum, int yaxisNum, int i, int j) {
+	public double getT() {
+		return t;
+	}
+
+	public void setT(double t) {
+		this.t = t;
+	}
+
+	public Vector getP0() {
+		return p0;
+	}
+
+	public void setP0(Vector p0) {
+		this.p0 = p0;
+	}
+
+	public Vector getV() {
+		return v;
+	}
+
+	public void setV(Vector v) {
+		this.v = v;
+	}
+
+	public void cameraRay(RayTracer tracer, int xaxisNum, int yaxisNum, int i, int j) {
 		// p0 = position 
 		// t = inf
+		
 		int n = tracer.scene.mySet.getSS(); // super sampling number
 		Camera cam = tracer.scene.cam;
 		int screenHeight = ( (tracer.imageWidth*tracer.imageHeight) / (cam.getSw_from_cam()) );
@@ -26,7 +57,10 @@ public class Ray {
 		double Vy = yaxisNum*sizeY + j*sizeJ - screenHeight/2 ;			//Y bar  
 		double Vz = cam.getSc_dist(); 									//screen distance TODO 
 		
-		new Ray(Double.POSITIVE_INFINITY,cam.getPosition(),new Vector(Vx,Vy,Vz));
+		this.setT(Double.POSITIVE_INFINITY);
+		this.setP0(cam.getPosition());
+		this.setV(new Vector(Vx, Vy, Vz));
+		
 	}
 	public double inter(Sphere sph) {
 		Vector L = sph.getPos().sub(this.p0);
