@@ -71,6 +71,7 @@ public class RayTracer {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		System.out.println("_goodbye_");
 	} // end of main 
 
 	/**
@@ -272,8 +273,8 @@ public class RayTracer {
 		int height = this.imageHeight;
 		
 		int p = 0;
-		for (int i = 0; i < rgbData.length; i++) {
-			for (int j = 0; j < rgbData.length; j++) {
+		for (int i = 0; i < weight; i++) {
+			for (int j = 0; j < height; j++) {
 				for (int k = 0; k < 3; k++) {
 					rgbData[p] = (byte) this.screen[i][j][k];
 					p++;
@@ -284,7 +285,7 @@ public class RayTracer {
 		long endTime = System.currentTimeMillis();
 		Long renderTime = endTime - startTime;
 
-		saveImage(this.imageWidth, rgbData, outputFileName);
+		//saveImage(this.imageWidth, rgbData, outputFileName);
 		
 		// The time is measured for your own conveniece, rendering speed will not affect your score
 		// unless it is exceptionally slow (more than a couple of minutes)
@@ -339,9 +340,9 @@ public class RayTracer {
 			}
 		} //for
 		if(flag > 0){
-			red = this.scene.materials.get(sphere.getMat_idx() -1 ).getDr();
-			green = this.scene.materials.get(sphere.getMat_idx() -1 ).getDg();
-			blue = this.scene.materials.get(sphere.getMat_idx() -1 ).getDb();
+			red = this.scene.materials.get(sphere.getMat_idx() -1 ).getDr() * 255;
+			green = this.scene.materials.get(sphere.getMat_idx() -1 ).getDg() * 255;
+			blue = this.scene.materials.get(sphere.getMat_idx() -1 ).getDb() * 255;
 		}
 		double [] ans = {red , green, blue};
 		return ans;
