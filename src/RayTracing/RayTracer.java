@@ -62,19 +62,8 @@ public class RayTracer {
 			
 			// Render scene:
 			tracer.renderScene(outputFileName);
-			int weight = tracer.imageWidth;
-			int height = tracer.imageHeight;
-			byte[] rgbData = new byte[weight * height * 3];
-			int p = 0;
-			for (int i = 0; i < rgbData.length; i++) {
-				for (int j = 0; j < rgbData.length; j++) {
-					for (int k = 0; k < 3; k++) {
-						rgbData[p] = (byte) tracer.screen[i][j][k];
-						p++;
-					}
-				}
-			}
-			saveImage(tracer.imageWidth, rgbData, outputFileName);
+
+			
 			//		} catch (IOException e) {
 			//			System.out.println(e.getMessage());
 		} catch (RayTracerException e) {
@@ -279,15 +268,24 @@ public class RayTracer {
 			}
 		}
 		
+		int weight = this.imageWidth;
+		int height = this.imageHeight;
 		
-		
-		
-		
-		
+		int p = 0;
+		for (int i = 0; i < rgbData.length; i++) {
+			for (int j = 0; j < rgbData.length; j++) {
+				for (int k = 0; k < 3; k++) {
+					rgbData[p] = (byte) this.screen[i][j][k];
+					p++;
+				}
+			}
+		}
 		
 		long endTime = System.currentTimeMillis();
 		Long renderTime = endTime - startTime;
 
+		saveImage(this.imageWidth, rgbData, outputFileName);
+		
 		// The time is measured for your own conveniece, rendering speed will not affect your score
 		// unless it is exceptionally slow (more than a couple of minutes)
 		System.out.println("Finished rendering scene in " + renderTime.toString() + " milliseconds.");
@@ -326,7 +324,8 @@ public class RayTracer {
 
 	private double[] sampleColorByRay(int xaxisNum, int yaxisNum, int i, int j) {
 		double t = 0;
-		double red,green,blue;
+		int flag = 0;
+		double red = 0,green = 0,blue = 0; // TODO - default value is white? Spouse to never happen that stays without change
 		Sphere sphere = new Sphere(); //TODO
 		Ray ray = new Ray();
 		ray.cameraRay(this, xaxisNum, yaxisNum, i, j);
@@ -335,12 +334,15 @@ public class RayTracer {
 				if (t < ray.t ) {
 					ray.t = t;
 					sphere = sph;
+					flag = 1;
 				}
 			}
-		} //for		
-		red = this.scene.materials.get(sphere.getMat_idx() -1 ).getDr();
-		green = this.scene.materials.get(sphere.getMat_idx() -1 ).getDg();
-		blue = this.scene.materials.get(sphere.getMat_idx() -1 ).getDb();
+		} //for
+		if(flag > 0){
+			red = this.scene.materials.get(sphere.getMat_idx() -1 ).getDr();
+			green = this.scene.materials.get(sphere.getMat_idx() -1 ).getDg();
+			blue = this.scene.materials.get(sphere.getMat_idx() -1 ).getDb();
+		}
 		double [] ans = {red , green, blue};
 		return ans;
 	}
