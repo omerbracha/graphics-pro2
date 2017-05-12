@@ -13,6 +13,21 @@ public class Light {
 	public int width;	//light width / radius (used for soft shadows)
 	public int index;
 	
+	public Light() {
+		this(new Vector(), 0, 0, 0, 0, 0, 0, 0);
+	}
+	
+	public Light(Vector position, double r, double g, double b, int spec, double shadow, int width, int index) {
+		super();
+		this.position = position;
+		this.r = r;
+		this.g = g;
+		this.b = b;
+		this.spec = spec;
+		this.shadow = shadow;
+		this.width = width;
+		this.index = index;
+	}
 	/**
 	 * @return the index
 	 */

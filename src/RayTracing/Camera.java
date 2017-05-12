@@ -11,7 +11,7 @@ public class Camera {
 	public int index;
 	
 	public Camera() {
-		new Camera(new Vector(0,0,0), new Vector(0,0,0), new Vector(0,0,0), 0, 0, 0);
+		this(new Vector(), new Vector(), new Vector(), 0, 0, 0);
 	}
 	
 	
@@ -24,6 +24,7 @@ public class Camera {
 		this.sw_from_cam = sw_from_cam;
 		this.index = index;
 	}
+	
 	public Vector getPosition() {
 		return position;
 	}

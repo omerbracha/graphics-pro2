@@ -1,12 +1,12 @@
 package RayTracing;
 
-import javax.print.attribute.standard.MediaSize.Other;
 
 public class Vector {
 	public double x, y, z;
 	public double size;
 	
 	public Vector(double x, double y, double z) {
+		super();
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -14,7 +14,7 @@ public class Vector {
 	}
 	
 	public Vector() {
-		new Vector(0,0,0);
+		this(0,0,0);
 	}
 	
 	public double dot(Vector other) {
