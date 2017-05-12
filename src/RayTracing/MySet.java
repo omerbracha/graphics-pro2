@@ -4,24 +4,24 @@ public class MySet {
 	public double bgr, bgg, bgb; //background colors
 	public int sh_rays; //shadow rays
 	public int rec_max; //maximum recursion
-	public int SS; //super sampling
+	public int SS = 2 ; //super sampling
 	
 	public double getBgr() {
 		return bgr;
 	}
-	public void setBgr(int bgr) {
+	public void setBgr(double bgr) {
 		this.bgr = bgr;
 	}
 	public double getBgg() {
 		return bgg;
 	}
-	public void setBgg(int bgg) {
+	public void setBgg(double bgg) {
 		this.bgg = bgg;
 	}
 	public double getBgb() {
 		return bgb;
 	}
-	public void setBgb(int bgb) {
+	public void setBgb(double bgb) {
 		this.bgb = bgb;
 	}
 	public int getSh_rays() {

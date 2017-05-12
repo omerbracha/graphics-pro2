@@ -77,7 +77,7 @@ public class Material {
 	public float getPhong() {
 		return phong;
 	}
-	public void setPhong(int phong) {
+	public void setPhong(float phong) {
 		this.phong = phong;
 	}
 	public double getTrans() {

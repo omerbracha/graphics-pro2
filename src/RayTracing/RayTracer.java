@@ -124,12 +124,17 @@ public class RayTracer {
 				{
 
 					MySet set = new MySet();
-					set.setBgr(Integer.parseInt(params[0]));		//R background color.
-					set.setBgg(Integer.parseInt(params[1])); 		//G background color.
-					set.setBgb(Integer.parseInt(params[2])); 		//B background color.
+					set.setBgr(Double.parseDouble(params[0]));		//R background color.
+					set.setBgg(Double.parseDouble(params[1])); 		//G background color.
+					set.setBgb(Double.parseDouble(params[2])); 		//B background color.
 					set.setSh_rays(Integer.parseInt(params[3])); 	//root number of shadow rays.
 					set.setRec_max(Integer.parseInt(params[4])); 	//maximum recursion.
+					
+					if(params.length > 5){
 					set.setSS(Integer.parseInt(params[5])); 		//super sampling level.
+					} else {
+						set.setSS(2);
+					}
 					
 					scene.setMySet(set); 							// set the setting
 					
@@ -149,7 +154,7 @@ public class RayTracer {
 					mat.setRr(Double.parseDouble(params[6]));
 					mat.setRg(Double.parseDouble(params[7]));
 					mat.setRb(Double.parseDouble(params[8]));
-					mat.setPhong(Integer.parseInt(params[9]));
+					mat.setPhong(Float.parseFloat(params[9]));
 					mat.setTrans(Double.parseDouble(params[10]));
 					
 					scene.setMaterial(mat);
