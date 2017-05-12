@@ -48,9 +48,9 @@ public class Ray {
 		
 		int n = tracer.scene.mySet.getSS(); // super sampling number
 		Camera cam = tracer.scene.cam;
-		int screenHeight = ( (tracer.imageWidth*tracer.imageHeight) / (cam.getSw_from_cam()) );
-		double sizeRIGHTcell = cam.getSw_from_cam()/tracer.imageWidth;
-		double sizeUPcell = screenHeight/tracer.imageHeight;
+		int screenHeight = ( (cam.getSw_from_cam()*tracer.imageHeight) / (tracer.imageWidth) );
+		double sizeRIGHTcell = cam.getSw_from_cam()/(double)tracer.imageWidth;
+		double sizeUPcell = screenHeight/(double)tracer.imageHeight;
 		double sizeRIGHTsmallCell = sizeRIGHTcell/n;
 		double sizeUPsmallCell = sizeUPcell/n;
 		
