@@ -17,7 +17,7 @@ import com.sun.glass.ui.Size;
 
 /**
  *  Main class for ray tracing exercise.
- */
+ *//// try to push from pc2
 
 public class RayTracer {
 	public int imageWidth;
