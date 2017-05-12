@@ -12,8 +12,6 @@ import java.util.List;
 // import javafx.scene.shape.Sphere;
 import javax.imageio.ImageIO;
 
-import com.sun.glass.ui.Screen;
-import com.sun.glass.ui.Size;
 
 /**
  *  Main class for ray tracing exercise.

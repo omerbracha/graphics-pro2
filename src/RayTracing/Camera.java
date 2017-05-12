@@ -10,7 +10,20 @@ public class Camera {
 	public int sw_from_cam;		// screen width from camera
 	public int index;
 	
+	public Camera() {
+		new Camera(new Vector(0,0,0), new Vector(0,0,0), new Vector(0,0,0), 0, 0, 0);
+	}
 	
+	
+	public Camera(Vector position, Vector lookat, Vector up, double sc_dist, int sw_from_cam, int index) {
+		super();
+		this.position = position;
+		this.lookat = lookat;
+		this.up = up;
+		this.sc_dist = sc_dist;
+		this.sw_from_cam = sw_from_cam;
+		this.index = index;
+	}
 	public Vector getPosition() {
 		return position;
 	}
