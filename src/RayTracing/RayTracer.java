@@ -307,6 +307,9 @@ public class RayTracer {
 	
 	//////////////////////// Utilities functions //////////////////////////////
 	private double[] getColorForPix(int XaxisNum, int YaxisNum) {
+		if( (XaxisNum == 250) && (YaxisNum == 260) ){
+			int yuval = 1;// braking point //TODO remove 
+		}
 		int red = 0, green = 0,blue = 0;
 		double[] ans = new double[3]; 
 		int size = scene.getMySet().getSS();
@@ -337,7 +340,7 @@ public class RayTracer {
 		ray.cameraRay(this, xaxisNum, yaxisNum, i, j);
 		for (Sphere sph : this.scene.getSpheres()) {
 			if((t = ray.inter(sph)) > 0 ){
-				if (t < ray.t ) {
+				if (t < ray.t ) { // no go 
 					ray.t = t;
 					sphere = sph;
 					flag = 1;

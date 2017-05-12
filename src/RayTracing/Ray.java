@@ -13,7 +13,7 @@ public class Ray {
 	}
 	
 	public Ray() {
-		this(0, new Vector(), new Vector());
+		this(Double.POSITIVE_INFINITY, new Vector(), new Vector());
 	}
 	
 	
@@ -42,24 +42,27 @@ public class Ray {
 		this.v = v;
 	}
 
-	public void cameraRay(RayTracer tracer, int xaxisNum, int yaxisNum, int i, int j) {
+	public void cameraRay(RayTracer tracer, int UPaxisNum, int RIGHTaxisNum, int i, int j) {
 		// p0 = position 
 		// t = inf
 		
 		int n = tracer.scene.mySet.getSS(); // super sampling number
 		Camera cam = tracer.scene.cam;
 		int screenHeight = ( (tracer.imageWidth*tracer.imageHeight) / (cam.getSw_from_cam()) );
-		double sizeX = cam.getSw_from_cam()/tracer.imageWidth;
-		double sizeY = screenHeight/tracer.imageHeight;
-		double sizeI = sizeX/n;
-		double sizeJ = sizeY/n;
-		double Vx =  xaxisNum*sizeX + i*sizeI - cam.getSw_from_cam()/2 ;//X bar
-		double Vy = yaxisNum*sizeY + j*sizeJ - screenHeight/2 ;			//Y bar  
-		double Vz = cam.getSc_dist(); 									//screen distance TODO 
+		double sizeRIGHTcell = cam.getSw_from_cam()/tracer.imageWidth;
+		double sizeUPcell = screenHeight/tracer.imageHeight;
+		double sizeRIGHTsmallCell = sizeRIGHTcell/n;
+		double sizeUPsmallCell = sizeUPcell/n;
+		
+		double Vright =  RIGHTaxisNum*sizeRIGHTcell + j*sizeRIGHTsmallCell - cam.getSw_from_cam()/2 ;//X bar
+		double Vup = UPaxisNum*sizeUPcell + i*sizeUPsmallCell - screenHeight/2 ;			//Y bar  
+		double Vin = cam.getSc_dist(); 									//screen distance TODO 
+		
+		double vSize = Math.sqrt(Vright*Vright + Vup*Vup + Vin*Vin);
 		
 		this.setT(Double.POSITIVE_INFINITY);
 		this.setP0(cam.getPosition());
-		this.setV(new Vector(Vx, Vy, Vz));
+		this.setV(new Vector(Vright/vSize, Vup/vSize, Vin/vSize));
 		
 	}
 	public double inter(Sphere sph) {
