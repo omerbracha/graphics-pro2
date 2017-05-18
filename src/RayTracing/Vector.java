@@ -45,9 +45,11 @@ public class Vector {
 		return vec;
 	}
 	
-	public void mult(int i) {
-		this.x = this.x*i;
-		this.y = this.y*i;
-		this.z = this.z*i;
+	public Vector mult(double i) {
+		Vector V = new Vector();
+		V.x = this.x*i;
+		V.y = this.y*i;
+		V.z = this.z*i;
+		return V;
 	}
 }

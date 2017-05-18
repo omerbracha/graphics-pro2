@@ -336,7 +336,7 @@ public class RayTracer {
 		Ray ray = new Ray();
 		ray.cameraRay(this, TopBottom, leftRight, i, j);
 		for (Sphere sph : this.scene.getSpheres()) {
-			if((t = ray.inter(sph)) > 0 ){
+			if((t = ray.interGeometric(sph)) > 0 ){
 				if (t < ray.t ) { // no go 
 					ray.t = t;
 					sphere = sph;

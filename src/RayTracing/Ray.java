@@ -68,20 +68,45 @@ public class Ray {
 		double t = Double.POSITIVE_INFINITY;
 		Vector p0 = cam.getPosition();
 		double sw = cam.getSw_from_cam();
+		double sd = cam.getSc_dist();
 		double sh = (sw/tracer.imageWidth) * tracer.imageHeight;
 		double Px = cam.getpX() - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
 		double Py = cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
 		double Pz = cam.getSc_dist();
 		double Vx = Px - p0.x;
 		double Vy = Py - p0.y;
-		double Vz = Pz - p0.z;
+		double Vz = Pz;
+		
+		// LS
+//		Vector right = cam.getLookat().cross(cam.getUp());
+//		Vector P1 = p0.add( cam.getLookat().mult(sd).sub( right.mult(sd*sw/2) ) );
+//		Vector P2 = p0.add( cam.getLookat().mult(sd).sub( right.mult(sd*sw/2) ) );
+//		Vector Pi = right.mult( (i/n)*2*sd*( n / (2*sd) ));
+//		Vector P = P1.add(Pi);
+//		Vector V = ( P.sub(p0) ).mult(1/P.sub(p0).size); 
+		
 		double size = Math.sqrt(Vx*Vx + Vy*Vy + Vz*Vz);
 		Vector V = new Vector(Vx/size, Vy/size, Vz/size);
+		
 		this.p0 = p0;
 		this.t = t;
 		this.v = V;
 	}
-	public double inter(Sphere sph) {
+	public double interAlgebraic(Sphere sph) {
+		double a = 1;
+		double b = 2 * this.getV().dot(this.getP0().sub(sph.getPos()));
+		double c = this.getV().dot(this.getV()) - sph.getRadius() * sph.getRadius();
+		double disc =  b*b - 4*a*c;
+		if(disc < 0 ) {
+			return -1; // no intersaction
+		}
+		double t1 = ( -b + Math.sqrt(disc)) / 2;
+		double t2 = ( -b - Math.sqrt(disc)) / 2;
+		
+		return interDist(t1, t2);
+		
+	}
+	public double interGeometric(Sphere sph) {
 		Vector L = sph.getPos().sub(this.p0);
 		double t_ca = L.dot(this.v);
 		if (t_ca < 0) {
