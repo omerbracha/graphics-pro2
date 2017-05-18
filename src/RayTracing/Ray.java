@@ -106,7 +106,7 @@ public class Ray {
 		return interDist(t1, t2);
 		
 	}
-	public double interGeometric(Sphere sph) {
+	public double inter(Sphere sph) {
 		Vector L = sph.getPos().sub(this.p0);
 		double t_ca = L.dot(this.v);
 		if (t_ca < 0) {
@@ -149,6 +149,14 @@ public class Ray {
 			return t2;
 		}
 		return t1;									// 1 is minimal 
+	}
+
+	public double inter(Shape sh) {
+		if(sh.getClass() == Sphere.class){
+			return inter( (Sphere) sh);
+		} else { 
+			return -1;
+		}
 	}
 
 

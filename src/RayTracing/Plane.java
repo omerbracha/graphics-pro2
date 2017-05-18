@@ -1,6 +1,6 @@
 package RayTracing;
 
-public class Plane {
+public class Plane extends Shape{
 	//TODO check xyz int or double
 	public int nx, ny, nz; //normal
 	public int offset; //offset

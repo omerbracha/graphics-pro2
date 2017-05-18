@@ -1,6 +1,6 @@
 package RayTracing;
 
-public class Triangle {
+public class Triangle extends Shape{
 	//TODO check xyz int or double
 	public double p0x, p0y, p0z; //position of vertex 1
 	public double p1x, p1y, p1z; //position of vertex 2

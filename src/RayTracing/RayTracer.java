@@ -173,7 +173,7 @@ public class RayTracer {
 					sphere.setRadius(Double.parseDouble(params[3])); 	// radius
 					sphere.setMat_idx(Integer.parseInt(params[4]));	// material index number
 					
-					scene.getSpheres().add(sphere); 				// add a sphere to the sphere list. 
+					scene.getShapes().add(sphere); 				// add a sphere to the sphere list. 
 					
 					System.out.println(String.format("Parsed sphere (line %d)", lineNum));
 				}
@@ -188,7 +188,7 @@ public class RayTracer {
 					pln.setOffset(Integer.parseInt(params[3]));
 					pln.setMat_idx(Integer.parseInt(params[4]));
 					
-					scene.getPlanes().add(pln);						// add a plane to the pln list.
+					scene.getShapes().add(pln);						// add a plane to the pln list.
 					
 					System.out.println(String.format("Parsed plane (line %d)", lineNum));
 				}
@@ -209,7 +209,7 @@ public class RayTracer {
 					trg.setP2z(Double.parseDouble(params[8]));
 					trg.setMat_idx(Integer.parseInt(params[9]));
 					
-					scene.getTriangles().add(trg);
+					scene.getShapes().add(trg);
 					
 					System.out.println(String.format("Parsed cylinder (line %d)", lineNum)); //TODO 
 				}
@@ -332,22 +332,22 @@ public class RayTracer {
 		double t = 0;
 		int flag = 0;
 		double red = 255,green = 255,blue = 255; // TODO - default value is white? Spouse to never happen that stays without change
-		Sphere sphere = new Sphere(); //TODO
+		Shape shape = new Shape() {}; 
 		Ray ray = new Ray();
 		ray.cameraRay(this, TopBottom, leftRight, i, j);
-		for (Sphere sph : this.scene.getSpheres()) {
-			if((t = ray.interGeometric(sph)) > 0 ){
+		for (Shape sh : this.scene.getShapes()) {
+			if((t = ray.inter(sh)) > 0 ){
 				if (t < ray.t ) { // no go 
 					ray.t = t;
-					sphere = sph;
+					shape = sh;
 					flag = 1;
 				}
 			}
 		} //for
 		if(flag > 0){
-			red = this.scene.materials.get(sphere.getMat_idx() -1 ).getDr() * 255;
-			green = this.scene.materials.get(sphere.getMat_idx() -1 ).getDg() * 255;
-			blue = this.scene.materials.get(sphere.getMat_idx() -1 ).getDb() * 255;
+			red = this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255;
+			green = this.scene.materials.get(shape.getMat_idx() -1 ).getDg() * 255;
+			blue = this.scene.materials.get(shape.getMat_idx() -1 ).getDb() * 255;
 		}
 		double [] ans = {red , green, blue};
 		return ans;

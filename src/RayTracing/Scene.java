@@ -10,6 +10,9 @@ public class Scene {
 	public ArrayList<Light> lights;
 	public ArrayList<Plane> planes;
 	public ArrayList<Material> materials;
+	
+	private ArrayList<Shape> shapes;
+	
 	public Scene() {
 		super();
 		this.mySet = null;
@@ -86,6 +89,10 @@ public class Scene {
 	 */
 	public ArrayList<Material> getMaterials() {
 		return materials;
+	}
+
+	public ArrayList<Shape> getShapes() {
+		return shapes;
 	}
 	
 	
