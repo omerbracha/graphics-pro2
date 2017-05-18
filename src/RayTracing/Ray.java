@@ -42,28 +42,44 @@ public class Ray {
 		this.v = v;
 	}
 
-	public void cameraRay(RayTracer tracer, int UPaxisNum, int RIGHTaxisNum, int i, int j) {
+	public void cameraRay(RayTracer tracer, int TopBottom, int leftRight, int i, int j) {
 		// p0 = position 
 		// t = inf
 		
 		int n = tracer.scene.mySet.getSS(); // super sampling number
 		Camera cam = tracer.scene.cam;
-		int screenHeight = ( (cam.getSw_from_cam()*tracer.imageHeight) / (tracer.imageWidth) );
-		double sizeRIGHTcell = cam.getSw_from_cam()/(double)tracer.imageWidth;
-		double sizeUPcell = screenHeight/(double)tracer.imageHeight;
-		double sizeRIGHTsmallCell = sizeRIGHTcell/n;
-		double sizeUPsmallCell = sizeUPcell/n;
-		
-		double Vright =  RIGHTaxisNum*sizeRIGHTcell + j*sizeRIGHTsmallCell - cam.getSw_from_cam()/2 ;//X bar
-		double Vup = UPaxisNum*sizeUPcell + i*sizeUPsmallCell - screenHeight/2 ;			//Y bar  
-		double Vin = cam.getSc_dist(); 									//screen distance TODO 
-		
-		double vSize = Math.sqrt(Vright*Vright + Vup*Vup + Vin*Vin);
-		
-		this.setT(Double.POSITIVE_INFINITY);
-		this.setP0(cam.getPosition());
-		this.setV(new Vector(Vright/vSize, Vup/vSize, Vin/vSize));
-		
+//		int screenHeight = ( (cam.getSw_from_cam()*tracer.imageHeight) / (tracer.imageWidth) );
+//		double sizeRIGHTcell = cam.getSw_from_cam()/(double)tracer.imageWidth;
+//		double sizeUPcell = screenHeight/(double)tracer.imageHeight;
+//		double sizeRIGHTsmallCell = sizeRIGHTcell/n;
+//		double sizeUPsmallCell = sizeUPcell/n;
+//		
+//		double Vright =  RIGHTaxisNum*sizeRIGHTcell + j*sizeRIGHTsmallCell - cam.getSw_from_cam()/2 ;//X bar
+//		double Vup = UPaxisNum*sizeUPcell + i*sizeUPsmallCell - screenHeight/2 ;			//Y bar  
+//		double Vin = cam.getSc_dist(); 									//screen distance TODO 
+//		
+//		double vSize = Math.sqrt(Vright*Vright + Vup*Vup + Vin*Vin);
+//		
+//		this.setT(Double.POSITIVE_INFINITY);
+//		this.setP0(cam.getPosition());
+//		this.setV(new Vector(Vright/vSize, Vup/vSize, Vin/vSize));
+//
+			/// new 
+		double t = Double.POSITIVE_INFINITY;
+		Vector p0 = cam.getPosition();
+		double sw = cam.getSw_from_cam();
+		double sh = (sw/tracer.imageWidth) * tracer.imageHeight;
+		double Px = cam.getpX() - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
+		double Py = cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
+		double Pz = cam.getSc_dist();
+		double Vx = Px - p0.x;
+		double Vy = Py - p0.y;
+		double Vz = Pz - p0.z;
+		double size = Math.sqrt(Vx*Vx + Vy*Vy + Vz*Vz);
+		Vector V = new Vector(Vx/size, Vy/size, Vz/size);
+		this.p0 = p0;
+		this.t = t;
+		this.v = V;
 	}
 	public double inter(Sphere sph) {
 		Vector L = sph.getPos().sub(this.p0);
@@ -71,13 +87,15 @@ public class Ray {
 		if (t_ca < 0) {
 			return -1;
 		}
+		
 		double d_pow = L.dot(L) - (t_ca*t_ca); 
 		if (d_pow > (sph.getRadius()*sph.getRadius())) {
 			return -1;
 		}
-		double t_hc = Math.sqrt(sph.getRadius()*sph.getRadius() - d_pow);
-		double dist = interDist(t_hc, t_ca);
-		return dist;
+		
+		double t_hc = Math.sqrt(sph.getRadius()*sph.getRadius() - d_pow); 	// never gets here. 
+		double dist = interDist(t_hc, t_ca);								// 
+		return dist;														// 
 	}
 	
 	public double interDist(double t_hc, double t_ca) {

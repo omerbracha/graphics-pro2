@@ -268,8 +268,8 @@ public class RayTracer {
 		//
 		// Each of the red, green and blue components should be a byte, i.e. 0-255
 		
-		for (int i = 0; i < imageWidth; i++) {				// run over x axis
-			for (int j = 0; j < imageHeight; j++) {			// run over y axis
+		for (int i = 0; i < imageWidth; i++) {				// run from top to bottom
+			for (int j = 0; j < imageHeight; j++) {			// run from left to right
 				this.screen[i][j] = getColorForPix(i,j);
 			}
 		}
@@ -306,17 +306,14 @@ public class RayTracer {
 	
 	
 	//////////////////////// Utilities functions //////////////////////////////
-	private double[] getColorForPix(int XaxisNum, int YaxisNum) {
-		if( (XaxisNum == 250) && (YaxisNum == 260) ){
-			int yuval = 1;// braking point //TODO remove 
-		}
+	private double[] getColorForPix(int topBottom, int leftRight) {
 		int red = 0, green = 0,blue = 0;
 		double[] ans = new double[3]; 
 		int size = scene.getMySet().getSS();
 		double[][][] superSampleMatrix = new double[size][size][3];
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				superSampleMatrix[i][j] =  sampleColorByRay(XaxisNum, YaxisNum,i ,j);
+				superSampleMatrix[i][j] =  sampleColorByRay(topBottom, leftRight,i ,j);
 				red += superSampleMatrix[i][j][0];		// sum red
 				green += superSampleMatrix[i][j][1];	// sum green
 				blue += superSampleMatrix[i][j][2];		// sum blue
@@ -331,13 +328,13 @@ public class RayTracer {
 
 
 
-	private double[] sampleColorByRay(int xaxisNum, int yaxisNum, int i, int j) {
+	private double[] sampleColorByRay(int TopBottom, int leftRight, int i, int j) {
 		double t = 0;
 		int flag = 0;
 		double red = 255,green = 255,blue = 255; // TODO - default value is white? Spouse to never happen that stays without change
 		Sphere sphere = new Sphere(); //TODO
 		Ray ray = new Ray();
-		ray.cameraRay(this, xaxisNum, yaxisNum, i, j);
+		ray.cameraRay(this, TopBottom, leftRight, i, j);
 		for (Sphere sph : this.scene.getSpheres()) {
 			if((t = ray.inter(sph)) > 0 ){
 				if (t < ray.t ) { // no go 
