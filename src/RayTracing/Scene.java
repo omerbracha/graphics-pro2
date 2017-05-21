@@ -10,8 +10,7 @@ public class Scene {
 	public ArrayList<Light> lights;
 	public ArrayList<Plane> planes;
 	public ArrayList<Material> materials;
-	
-	private ArrayList<Shape> shapes;
+	public ArrayList<Shape> shapes;
 	
 	public Scene() {
 		super();
@@ -22,6 +21,7 @@ public class Scene {
 		this.lights = new ArrayList<Light>();
 		this.planes = new ArrayList<Plane>();
 		this.materials = new ArrayList<Material>();
+		this.shapes = new ArrayList<Shape>();
 	}
 
 	/**

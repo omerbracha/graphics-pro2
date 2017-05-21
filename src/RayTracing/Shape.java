@@ -77,5 +77,75 @@ public abstract class Shape {
 	public void setMat_idx(int mat_idx) {
 		this.mat_idx = mat_idx;
 	}
-	
+	public void setIndex(int cnt_sph) {
+		// TODO 
+		
+	}
+	public void setCx(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setCy(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setCz(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setRadius(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setNx(int parseInt) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setNy(int parseInt) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setNz(int parseInt) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setOffset(int parseInt){
+		
+	}
+	public void setP0x(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setP0y(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setP0z(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setP1x(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setP1y(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setP1z(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setP2x(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setP2y(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setP2z(double parseDouble) {
+		// TODO Auto-generated method stub
+		
+	}
 }

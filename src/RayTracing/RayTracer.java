@@ -164,7 +164,7 @@ public class RayTracer {
 				else if (code.equals("sph"))
 				{
 					// Add code here to parse sphere parameters
-					Sphere sphere = new Sphere();
+					Shape sphere = new Sphere();
 					sphere.setIndex(cnt_sph);
 					cnt_sph++;
 					sphere.setCx(Double.parseDouble(params[0])); 		// sphere center x
@@ -172,14 +172,12 @@ public class RayTracer {
 					sphere.setCz(Double.parseDouble(params[2]));		// sphere center z
 					sphere.setRadius(Double.parseDouble(params[3])); 	// radius
 					sphere.setMat_idx(Integer.parseInt(params[4]));	// material index number
-					
 					scene.getShapes().add(sphere); 				// add a sphere to the sphere list. 
 					
 					System.out.println(String.format("Parsed sphere (line %d)", lineNum));
 				}
 				else if (code.equals("pln")) {
-
-					Plane pln = new Plane();
+					Shape pln = new Plane();
 					pln.setIndex(cnt_pln);
 					cnt_pln++;
 					pln.setNx(Integer.parseInt(params[0]));                    
@@ -187,7 +185,6 @@ public class RayTracer {
 					pln.setNz(Integer.parseInt(params[2]));
 					pln.setOffset(Integer.parseInt(params[3]));
 					pln.setMat_idx(Integer.parseInt(params[4]));
-					
 					scene.getShapes().add(pln);						// add a plane to the pln list.
 					
 					System.out.println(String.format("Parsed plane (line %d)", lineNum));
@@ -195,7 +192,7 @@ public class RayTracer {
 				else if (code.equals("trg"))
 				{
 					
-					Triangle trg = new Triangle();
+					Shape trg = new Triangle();
 					trg.setMat_idx(cnt_mtl);
 					cnt_mtl++;
 					trg.setP0x(Double.parseDouble(params[0]));                
@@ -224,7 +221,7 @@ public class RayTracer {
 					lict.setR(Double.parseDouble(params[3])); 		// red
 					lict.setG(Double.parseDouble(params[4])); 		// green
 					lict.setB(Double.parseDouble(params[5])); 		// blue
-					lict.setSpec(Double.parseDouble(params[6]));		// specular
+					lict.setSpec(Double.parseDouble(params[6]));	// specular
 					lict.setShadow(Double.parseDouble(params[7]));	// shadow
 					lict.setWidth(Integer.parseInt(params[8]));		// width
 					
