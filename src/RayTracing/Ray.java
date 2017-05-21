@@ -164,11 +164,15 @@ public class Ray {
 	}
 
 	public double inter(Shape sh) {
-		if(sh.getClass() == Sphere.class){
+		if(sh.getClass() == Sphere.class) {
 			return inter( (Sphere) sh);
-		} else { 
-			return -1;
 		}
+		if(sh.getClass() == Plane.class) {
+			return inter( (Plane) sh );
+		}
+			// else 
+			return -1;
+		
 	}
 
 
