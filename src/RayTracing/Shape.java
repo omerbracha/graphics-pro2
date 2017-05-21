@@ -97,15 +97,15 @@ public abstract class Shape {
 		// TODO Auto-generated method stub
 		
 	}
-	public void setNx(int parseInt) {
+	public void setNx(double parseDouble) {
 		// TODO Auto-generated method stub
 		
 	}
-	public void setNy(int parseInt) {
+	public void setNy(double parseDouble) {
 		// TODO Auto-generated method stub
 		
 	}
-	public void setNz(int parseInt) {
+	public void setNz(double parseDouble) {
 		// TODO Auto-generated method stub
 		
 	}
