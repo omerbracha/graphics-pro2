@@ -135,6 +135,56 @@ public class Ray {
 		
 	}
 	
+	public double inter(Triangle trng) {
+		Vector norm = triangleToPlane(trng);
+		Plane plane = trngToPlane(trng, norm);
+		
+		double t = inter(plane);
+		if (t < 0) {
+			return -1;
+		}
+		Vector p0 = this.getP0();
+		Vector p = this.getV().mult(t).add(p0);
+		
+		Vector t1 = new Vector(trng.getP0x(), trng.getP0y(), trng.getP0z());
+		Vector t2 = new Vector(trng.getP1x(), trng.getP1y(), trng.getP1z());
+		Vector t3 = new Vector(trng.getP2x(), trng.getP2y(), trng.getP2z());
+		
+		Vector v1 = t1.sub(p0);
+		Vector v2 = t2.sub(p0);
+		Vector v3 = t3.sub(p0);
+		
+		Vector n1 = v2.cross(v1);
+		Vector n2 = v3.cross(v2);
+		Vector n3 = v1.cross(v3);
+		
+		if ( (p.sub(p0).dot(n1) < 0) || (p.sub(p0).dot(n2) < 0) || (p.sub(p0).dot(n3) < 0) ) {
+			return -1;
+		}
+		
+		return t;
+	}
+	
+	private Plane trngToPlane(Triangle trng, Vector norm) {
+		Plane plane = new Plane();
+		double d = -norm.x*trng.getP0x() - norm.y*trng.getP0y() - norm.z*trng.getP0z();
+		
+		plane.setNx(norm.x);
+		plane.setNy(norm.y);
+		plane.setNz(norm.z);
+		plane.setOffset(d);
+		plane.setMat_idx(trng.getMat_idx());
+		
+		return plane;
+	}
+
+	private Vector triangleToPlane(Triangle trng) {
+		Vector ab = new Vector(trng.getP1x()-trng.getP0x(), trng.getP1y()-trng.getP0y(), trng.getP1z()-trng.getP0z());
+		Vector ac = new Vector(trng.getP2x()-trng.getP0x(), trng.getP2y()-trng.getP0y(), trng.getP2z()-trng.getP0z());
+		Vector norm = ab.cross(ac);
+		return norm;
+	}
+
 	public double interDist(double t_hc, double t_ca) {
 		
 		/*

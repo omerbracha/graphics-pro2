@@ -3,10 +3,29 @@ package RayTracing;
 public class Plane extends Shape{
 	//TODO check xyz int or double
 	public double nx, ny, nz; //normal
-	public int offset; //offset
+	public double offset; //offset
 	public int mat_idx; //material index
 	public int index;
 	
+	public Plane(double x, double y, double z, Vector position, int mat_idx, double nx, double ny, double nz,
+			double offset, int mat_idx2, int index) {
+		super(x, y, z, position, mat_idx);
+		this.nx = nx;
+		this.ny = ny;
+		this.nz = nz;
+		this.offset = offset;
+		mat_idx = mat_idx2;
+		this.index = index;
+	}
+	
+	public Plane() {
+		this.nx = 0;
+		this.ny = 0;
+		this.nz = 0;
+		this.offset = 0;
+		mat_idx = 0;
+		this.index = 0;
+	}
 	/**
 	 * @return the index
 	 */
@@ -37,10 +56,10 @@ public class Plane extends Shape{
 	public void setNz(double nz) {
 		this.nz = nz;
 	}
-	public int getOffset() {
+	public double getOffset() {
 		return offset;
 	}
-	public void setOffset(int offset) {
+	public void setOffset(double offset) {
 		this.offset = offset;
 	}
 	public int getMat_idx() {

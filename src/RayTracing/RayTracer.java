@@ -183,7 +183,7 @@ public class RayTracer {
 					pln.setNx(Double.parseDouble(params[0]));                    
 					pln.setNy(Double.parseDouble(params[1]));
 					pln.setNz(Double.parseDouble(params[2]));
-					pln.setOffset(Integer.parseInt(params[3]));
+					pln.setOffset(Double.parseDouble(params[3]));
 					pln.setMat_idx(Integer.parseInt(params[4]));
 					scene.getShapes().add(pln);						// add a plane to the pln list.
 					

@@ -109,7 +109,7 @@ public abstract class Shape {
 		// TODO Auto-generated method stub
 		
 	}
-	public void setOffset(int parseInt){
+	public void setOffset(double parseDouble){
 		
 	}
 	public void setP0x(double parseDouble) {
