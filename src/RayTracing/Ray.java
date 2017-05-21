@@ -128,6 +128,7 @@ public class Ray {
 		Vector p0 = this.getP0();
 		
 		double t = - ( (p0.dot(normal) + plane.getOffset()) / (this.getV().dot(normal)));
+		//double t = - ( (p0.dot(normal) + plane.getOffset()) / (this.getV().size));
 		if (t < 0) {
 			return -1;
 		}
