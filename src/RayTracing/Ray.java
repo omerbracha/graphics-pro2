@@ -123,6 +123,18 @@ public class Ray {
 		return dist;														// 
 	}
 	
+	public double inter(Plane plane) {
+		Vector normal = new Vector (plane.getNx(), plane.getNy(), plane.getNz());
+		Vector p0 = this.getP0();
+		
+		double t = - ( (p0.dot(normal) + plane.getOffset()) / (this.getV().dot(normal)));
+		if (t < 0) {
+			return -1;
+		}
+		return t;
+		
+	}
+	
 	public double interDist(double t_hc, double t_ca) {
 		
 		/*

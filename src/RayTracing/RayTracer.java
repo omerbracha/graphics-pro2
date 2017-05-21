@@ -180,9 +180,9 @@ public class RayTracer {
 					Shape pln = new Plane();
 					pln.setIndex(cnt_pln);
 					cnt_pln++;
-					pln.setNx(Integer.parseInt(params[0]));                    
-					pln.setNy(Integer.parseInt(params[1]));
-					pln.setNz(Integer.parseInt(params[2]));
+					pln.setNx(Double.parseDouble(params[0]));                    
+					pln.setNy(Double.parseDouble(params[1]));
+					pln.setNz(Double.parseDouble(params[2]));
 					pln.setOffset(Integer.parseInt(params[3]));
 					pln.setMat_idx(Integer.parseInt(params[4]));
 					scene.getShapes().add(pln);						// add a plane to the pln list.

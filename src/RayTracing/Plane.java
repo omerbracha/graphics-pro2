@@ -2,7 +2,7 @@ package RayTracing;
 
 public class Plane extends Shape{
 	//TODO check xyz int or double
-	public int nx, ny, nz; //normal
+	public double nx, ny, nz; //normal
 	public int offset; //offset
 	public int mat_idx; //material index
 	public int index;
@@ -19,22 +19,22 @@ public class Plane extends Shape{
 	public void setIndex(int index) {
 		this.index = index;
 	}
-	public int getNx() {
+	public double getNx() {
 		return nx;
 	}
-	public void setNx(int nx) {
+	public void setNx(double nx) {
 		this.nx = nx;
 	}
-	public int getNy() {
+	public double getNy() {
 		return ny;
 	}
-	public void setNy(int ny) {
+	public void setNy(double ny) {
 		this.ny = ny;
 	}
-	public int getNz() {
+	public double getNz() {
 		return nz;
 	}
-	public void setNz(int nz) {
+	public void setNz(double nz) {
 		this.nz = nz;
 	}
 	public int getOffset() {
