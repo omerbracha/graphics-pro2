@@ -126,14 +126,11 @@ public class Ray {
 	public double inter(Plane plane) {
 		Vector normal = new Vector (plane.getNx(), plane.getNy(), plane.getNz());
 		Vector p0 = this.getP0();
-		double c = - ( plane.nx * this.getV().x + plane.ny * this.getV().y + plane.nz * this.getV().z  ) + plane.getOffset();
-		double t = - ( (p0.dot(normal) + c) / (this.getV().dot(normal)));
-		//double t = - ( (p0.dot(normal) + plane.getOffset()) / (this.getV().dot(normal)));
+		double t = - ( (p0.dot(normal) - plane.getOffset()) / (this.getV().dot(normal)));
 		if (t < 0) {
 			return -1;
 		}
 		return t;
-		
 	}
 	
 	public double inter(Triangle trng) {
