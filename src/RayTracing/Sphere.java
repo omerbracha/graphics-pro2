@@ -4,7 +4,7 @@ public class Sphere extends Shape{
 	//TODO check xyz int or double
 	public double cx, cy, cz; 	// center positions 
 	public double radius; 		// radius
-	public int mat_idx;		// material index.
+	//public int mat_idx;		// material index.
 	public int index;
 	/**
 	 * @return the index

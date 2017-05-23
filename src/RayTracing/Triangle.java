@@ -5,7 +5,7 @@ public class Triangle extends Shape{
 	public double p0x, p0y, p0z; //position of vertex 1
 	public double p1x, p1y, p1z; //position of vertex 2
 	public double p2x, p2y, p2z; //position of vertex 3
-	public int mat_idx; //material index
+	//public int mat_idx; //material index
 	
 	public double getP0x() {
 		return p0x;

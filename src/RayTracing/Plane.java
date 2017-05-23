@@ -4,17 +4,17 @@ public class Plane extends Shape{
 	//TODO check xyz int or double
 	public double nx, ny, nz; //normal
 	public double offset; //offset
-	public int mat_idx; //material index
+	//public int mat_idx; //material index
 	public int index;
+	//double x, double y, double z, Vector position, int mat_idx, 
 	
-	public Plane(double x, double y, double z, Vector position, int mat_idx, double nx, double ny, double nz,
-			double offset, int mat_idx2, int index) {
-		super(x, y, z, position, mat_idx);
+	public Plane(double nx, double ny, double nz, double offset, int mat_idx, int index) {
+		//super(x, y, z, position, mat_idx);
 		this.nx = nx;
 		this.ny = ny;
 		this.nz = nz;
 		this.offset = offset;
-		mat_idx = mat_idx2;
+		this.mat_idx = mat_idx;
 		this.index = index;
 	}
 	
@@ -23,7 +23,7 @@ public class Plane extends Shape{
 		this.ny = 0;
 		this.nz = 0;
 		this.offset = 0;
-		mat_idx = 0;
+		this.mat_idx = 0;
 		this.index = 0;
 	}
 	/**

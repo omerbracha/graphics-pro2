@@ -134,7 +134,7 @@ public class Ray {
 	}
 	
 	public double inter(Triangle trng) {
-		Vector norm = triangleToPlane(trng);
+		Vector norm = triangleToNorm(trng);
 		Plane plane = trngToPlane(trng, norm);
 		
 		double t = inter(plane);
@@ -165,20 +165,26 @@ public class Ray {
 	
 	private Plane trngToPlane(Triangle trng, Vector norm) {
 		Plane plane = new Plane();
-		double d = -norm.x*trng.getP0x() - norm.y*trng.getP0y() - norm.z*trng.getP0z();
+		double d = - norm.x*trng.getP0x() - norm.y*trng.getP0y() - norm.z*trng.getP0z();
 		
 		plane.setNx(norm.x);
 		plane.setNy(norm.y);
 		plane.setNz(norm.z);
-		plane.setOffset(d);
+		plane.setOffset(-d);
 		plane.setMat_idx(trng.getMat_idx());
 		
 		return plane;
 	}
 
-	private Vector triangleToPlane(Triangle trng) {
+	private Vector triangleToNorm(Triangle trng) {
 		Vector ab = new Vector(trng.getP1x()-trng.getP0x(), trng.getP1y()-trng.getP0y(), trng.getP1z()-trng.getP0z());
 		Vector ac = new Vector(trng.getP2x()-trng.getP0x(), trng.getP2y()-trng.getP0y(), trng.getP2z()-trng.getP0z());
+		ab.x = ab.x/ab.size;
+		ab.y = ab.y/ab.size;
+		ab.z = ab.z/ab.size;
+		ac.x = ac.x/ac.size;
+		ac.y = ac.y/ac.size;
+		ac.z = ac.z/ac.size;
 		Vector norm = ab.cross(ac);
 		return norm;
 	}
@@ -218,6 +224,10 @@ public class Ray {
 		if(sh.getClass() == Plane.class) {
 			return inter( (Plane) sh );
 		}
+		if(sh.getClass() == Triangle.class) {
+			return inter( (Triangle) sh );
+		}
+		
 			// else 
 			return -1;
 		
