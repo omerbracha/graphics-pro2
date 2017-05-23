@@ -1,4 +1,4 @@
-package RayTracing;
+ package RayTracing;
 
 public class Ray {
 	public double t;		// intersection point
@@ -54,6 +54,7 @@ public class Ray {
 		double sw = cam.getSw_from_cam();
 		double sd = cam.getSc_dist();
 		double sh = (sw/tracer.imageWidth) * tracer.imageHeight;
+		//double sh = sw;//(sw/tracer.imageWidth) * tracer.imageHeight;
 		
 		Vector lookAt = cam.getLookat();
 		lookAt.x = lookAt.x - p0.x;

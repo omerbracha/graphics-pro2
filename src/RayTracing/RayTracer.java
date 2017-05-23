@@ -278,7 +278,7 @@ public class RayTracer {
 		int height = this.imageHeight;
 		
 		int p = 0;
-		for (int i = 0; i < weight; i++) {
+		for (int i = weight - 1; i >= 0; i--) {
 			for (int j = 0; j < height; j++) {
 				for (int k = 0; k < 3; k++) {
 					rgbData[p] = (byte) this.screen[i][j][k];
@@ -346,7 +346,8 @@ public class RayTracer {
 			// get phong shading value.
 			//Vector camPosition = this.scene.getCam().getPosition();
 			Vector endPoint = ray.getP();
-			double phongShade = getPhongShade(this,endPoint);
+			//double phongShade = getPhongShade(this,endPoint);
+			double phongShade = 1;
 			//System.out.println(Double.toString(phongShade));
 			// get base color by ray.
 			red = this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255 * phongShade;
