@@ -48,34 +48,36 @@ public class Ray {
 		
 		int n = tracer.scene.mySet.getSS(); // super sampling number
 		Camera cam = tracer.scene.cam;
-//		int screenHeight = ( (cam.getSw_from_cam()*tracer.imageHeight) / (tracer.imageWidth) );
-//		double sizeRIGHTcell = cam.getSw_from_cam()/(double)tracer.imageWidth;
-//		double sizeUPcell = screenHeight/(double)tracer.imageHeight;
-//		double sizeRIGHTsmallCell = sizeRIGHTcell/n;
-//		double sizeUPsmallCell = sizeUPcell/n;
-//		
-//		double Vright =  RIGHTaxisNum*sizeRIGHTcell + j*sizeRIGHTsmallCell - cam.getSw_from_cam()/2 ;//X bar
-//		double Vup = UPaxisNum*sizeUPcell + i*sizeUPsmallCell - screenHeight/2 ;			//Y bar  
-//		double Vin = cam.getSc_dist(); 									//screen distance TODO 
-//		
-//		double vSize = Math.sqrt(Vright*Vright + Vup*Vup + Vin*Vin);
-//		
-//		this.setT(Double.POSITIVE_INFINITY);
-//		this.setP0(cam.getPosition());
-//		this.setV(new Vector(Vright/vSize, Vup/vSize, Vin/vSize));
-//
-			/// new 
+
 		double t = Double.POSITIVE_INFINITY;
 		Vector p0 = cam.getPosition();
 		double sw = cam.getSw_from_cam();
 		double sd = cam.getSc_dist();
 		double sh = (sw/tracer.imageWidth) * tracer.imageHeight;
+		
+		Vector lookAt = cam.getLookat();
+		lookAt.x = lookAt.x - p0.x;
+		lookAt.y = lookAt.y - p0.y;
+		lookAt.z = lookAt.z - p0.z;
+		lookAt = lookAt.normalize();
+		double lookX = lookAt.x*sd;
+		double lookY = lookAt.y*sd;
+		double lookZ = lookAt.z;
+		
+		double Px = lookX + cam.getpX() - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
+		double Py = lookY + cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
+		double Pz = lookZ;
+		double Vx = Px - p0.x;
+		double Vy = Py - p0.y;
+		double Vz = Pz;
+		/*
 		double Px = cam.getpX() - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
 		double Py = cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
 		double Pz = cam.getSc_dist();
 		double Vx = Px - p0.x;
 		double Vy = Py - p0.y;
 		double Vz = Pz;
+		*/
 		
 		// LS
 //		Vector right = cam.getLookat().cross(cam.getUp());

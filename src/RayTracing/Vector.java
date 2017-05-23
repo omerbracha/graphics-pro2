@@ -29,6 +29,20 @@ public class Vector {
 		return vec;
 	}
 	
+	public double getSize() {
+		double size = Math.sqrt(x*x + y*y + z*z);
+		return size;
+	}
+	
+	public Vector normalize() {
+		double size = this.getSize();
+		if (size == 0.0) {
+			return this;
+		}
+		Vector vec = new Vector(this.x/size, this.y/size, this.z/size);
+		return vec;
+	}
+	
 	public Vector add(Vector other) {
 		Vector vec = new Vector();
 		vec.x = this.x + other.x;
