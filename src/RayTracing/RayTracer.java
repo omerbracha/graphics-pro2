@@ -326,8 +326,6 @@ public class RayTracer {
 		return ans;
 	}
 
-
-
 	private double[] sampleColorByRay(int TopBottom, int leftRight, int i, int j) {
 		double t = 0;
 		int flag = 0;
@@ -348,42 +346,42 @@ public class RayTracer {
 			// get phong shading value.
 			//Vector camPosition = this.scene.getCam().getPosition();
 			Vector endPoint = ray.getP();
-			double phongShade = 1 - getPhongShade(this,endPoint);
+			double phongShade = getPhongShade(this,endPoint);
+			//System.out.println(Double.toString(phongShade));
 			// get base color by ray.
 			red = this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255 * phongShade;
 			green = this.scene.materials.get(shape.getMat_idx() -1 ).getDg() * 255 * phongShade;
 			blue = this.scene.materials.get(shape.getMat_idx() -1 ).getDb() * 255 * phongShade;
 		}
+		//System.out.println("red = " +Double.toString(red)+" green = " +Double.toString(green)+"blue = "+Double.toString(blue));
 		double [] ans = {red , green, blue};
 		return ans;
 	}
 
 	public double getPhongShade(RayTracer rayTracer, Vector endPoint) {
-		double ans = 0;
+		double ans = 1;
 		for (Light licht : rayTracer.scene.getLights()) {			
 			double t = endPoint.getDistanceScalar(licht.getPosition());
-			Vector p0 = endPoint;
 			Vector v = endPoint.sub(licht.getPosition());
+			Vector p0 = endPoint.add(v.mult(1)) ;
 			Ray shadeRay = new Ray(t, p0, v);
 			
 			for (Shape sh : rayTracer.scene.getShapes()) {
 				if(shadeRay.inter(sh) > 0){
-					ans += rayTracer.scene.getMaterials().get(sh.getMat_idx() - 1).getTrans() * licht.getShadow();
+					//ans = 0;
+					ans =  1 - licht.getShadow();
 				}
 			}
 		}
-			if(ans >= 1 ){
-				ans = 1;
-			} else {
-				ans = ans;
-			}
+//			if(ans >= 1 ){
+//				ans = 1;
+//			} else {
+//				ans = ans;
+//			}
 			return ans;
 	}
 	
 	//////////////////////// FUNCTIONS TO SAVE IMAGES IN PNG FORMAT //////////////////////////////////////////
-
-
-
 
 	/*
 	 * Saves RGB data as an image in png format to the specified location.
