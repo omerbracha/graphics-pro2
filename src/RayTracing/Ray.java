@@ -62,9 +62,9 @@ public class Ray {
 		double sinx = Math.sin(lookat.x);
 		
 		double[][] m = {{cosy,0,siny},{-sinx*siny,cosx,sinx*cosy},{-cosx*siny,-sinx,cosx*cosy}}; 
-		double[] v1 = {1,0,0};
-		double[] v2 = {0,1,0};
-		double[] v3 = {0,0,1};
+		Vector v1 = new Vector(1,0,0);
+		Vector v2 = new Vector(0,1,0);
+		Vector v3 = new Vector(0,0,1);
 		Vector Vx1 = vecTimesMat(v1, m);
 		Vector Vy1 = vecTimesMat(v2, m);
 		Vector Vz1 = vecTimesMat(v3, m);
@@ -73,9 +73,12 @@ public class Ray {
 		double Py = cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
 		double Pz = cam.getSc_dist();
 		
-		double Vx = Px - p0.x;
-		double Vy = Py - p0.y;
-		double Vz = Pz;
+		Vector v = new Vector(Px,Py,Pz);
+		v = vecTimesMat(v, m);
+		
+		double Vx = v.x - p0.x;
+		double Vy = v.y - p0.y;
+		double Vz = v.z;
 		
 		/*//////////////from ozeri slide//////////////
 		
@@ -126,12 +129,13 @@ public class Ray {
 		
 		this.p0 = p0;
 		this.t = t;
-		this.v = V;
+		this.v = new Vector(Vx, Vy, Vz);
 	}
-	private Vector vecTimesMat(double[] v1, double[][] m) {
-		double vx = v1[0]*m[0][0] + v1[1]*m[1][0] + v1[2]*m[2][0];
-		double vy = v1[0]*m[0][1] + v1[1]*m[1][1] + v1[2]*m[2][1];
-		double vz = v1[0]*m[0][2] + v1[1]*m[1][2] + v1[2]*m[2][2];
+	
+	private Vector vecTimesMat(Vector v1, double[][] m) {
+		double vx = v1.x*m[0][0] + v1.y*m[1][0] + v1.z*m[2][0];
+		double vy = v1.x*m[0][1] + v1.y*m[1][1] + v1.z*m[2][1];
+		double vz = v1.x*m[0][2] + v1.y*m[1][2] + v1.z*m[2][2];
 		Vector v = new Vector(vx,vy,vz);
 		return v;
 	}
