@@ -54,7 +54,45 @@ public class Ray {
 		double sw = cam.getSw_from_cam();
 		double sd = cam.getSc_dist();
 		double sh = (sw/tracer.imageWidth) * tracer.imageHeight;
-		//double sh = sw;//(sw/tracer.imageWidth) * tracer.imageHeight;
+		Vector lookat = cam.getLookat().sub(p0);
+		lookat = lookat.normalize();
+		double cosy = Math.cos(lookat.y);
+		double siny = Math.sin(lookat.y);
+		double cosx = Math.cos(lookat.x);
+		double sinx = Math.sin(lookat.x);
+		
+		double[][] m = {{cosy,0,siny},{-sinx*siny,cosx,sinx*cosy},{-cosx*siny,-sinx,cosx*cosy}}; 
+		double[] v1 = {1,0,0};
+		double[] v2 = {0,1,0};
+		double[] v3 = {0,0,1};
+		Vector Vx1 = vecTimesMat(v1, m);
+		Vector Vy1 = vecTimesMat(v2, m);
+		Vector Vz1 = vecTimesMat(v3, m);
+		
+		double Px = cam.getpX() - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
+		double Py = cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
+		double Pz = cam.getSc_dist();
+		
+		double Vx = Px - p0.x;
+		double Vy = Py - p0.y;
+		double Vz = Pz;
+		
+		/*//////////////from ozeri slide//////////////
+		
+		Vector normal = p0.sub(cam.getLookat());
+		normal = normal.normalize();
+		Vector u = cam.getUp().cross(normal);
+		u = u.normalize();
+		Vector v = normal.cross(u);
+		
+		Vector c = p0.sub(normal.mult(sd));
+		Vector l = c.sub(u.mult(sw/2)).sub(v.mult(sh/2));
+		Vector V = l.add(u.mult((sw/tracer.imageWidth) * (leftRight + (j/n)))).add(v.mult((sh/tracer.imageHeight) * (TopBottom + (i/n))));
+		*/
+		
+		
+		
+		/*///////////////////with semi lookat//////////////////
 		
 		Vector lookAt = cam.getLookat();
 		lookAt.x = lookAt.x - p0.x;
@@ -71,7 +109,10 @@ public class Ray {
 		double Vx = Px - p0.x;
 		double Vy = Py - p0.y;
 		double Vz = Pz;
-		/*
+		*/
+		
+		/*/////////without lookat///////////////////
+		
 		double Px = cam.getpX() - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
 		double Py = cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
 		double Pz = cam.getSc_dist();
@@ -80,21 +121,21 @@ public class Ray {
 		double Vz = Pz;
 		*/
 		
-		// LS
-//		Vector right = cam.getLookat().cross(cam.getUp());
-//		Vector P1 = p0.add( cam.getLookat().mult(sd).sub( right.mult(sd*sw/2) ) );
-//		Vector P2 = p0.add( cam.getLookat().mult(sd).sub( right.mult(sd*sw/2) ) );
-//		Vector Pi = right.mult( (i/n)*2*sd*( n / (2*sd) ));
-//		Vector P = P1.add(Pi);
-//		Vector V = ( P.sub(p0) ).mult(1/P.sub(p0).size); 
-		
-		double size = Math.sqrt(Vx*Vx + Vy*Vy + Vz*Vz);
-		Vector V = new Vector(Vx/size, Vy/size, Vz/size);
+//		double size = Math.sqrt(Vx*Vx + Vy*Vy + Vz*Vz);
+//		Vector V = new Vector(Vx/size, Vy/size, Vz/size);
 		
 		this.p0 = p0;
 		this.t = t;
 		this.v = V;
 	}
+	private Vector vecTimesMat(double[] v1, double[][] m) {
+		double vx = v1[0]*m[0][0] + v1[1]*m[1][0] + v1[2]*m[2][0];
+		double vy = v1[0]*m[0][1] + v1[1]*m[1][1] + v1[2]*m[2][1];
+		double vz = v1[0]*m[0][2] + v1[1]*m[1][2] + v1[2]*m[2][2];
+		Vector v = new Vector(vx,vy,vz);
+		return v;
+	}
+
 	public double interAlgebraic(Sphere sph) {
 		double a = 1;
 		double b = 2 * this.getV().dot(this.getP0().sub(sph.getPos()));
