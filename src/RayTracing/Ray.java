@@ -233,5 +233,10 @@ public class Ray {
 		
 	}
 
+	public Vector getP() {
+		Vector ans = this.getP0().add(this.v.mult(this.t));
+		return ans;
+	}
+
 
 } // end of ray class

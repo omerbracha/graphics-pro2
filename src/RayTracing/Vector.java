@@ -52,4 +52,13 @@ public class Vector {
 		V.z = this.z*i;
 		return V;
 	}
+
+	public double getDistanceScalar(Vector position) {
+		double x = this.x - position.x;
+		double y = this.y - position.y;
+		double z = this.z - position.z;
+		return Math.sqrt(x*x + y*y + z*z);
+	}
+
+
 }

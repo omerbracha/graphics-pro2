@@ -12,6 +12,8 @@ import java.util.List;
 // import javafx.scene.shape.Sphere;
 import javax.imageio.ImageIO;
 
+import com.sun.org.apache.xml.internal.utils.ListingErrorHandler;
+
 
 /**
  *  Main class for ray tracing exercise.
@@ -265,8 +267,9 @@ public class RayTracer {
 		//
 		// Each of the red, green and blue components should be a byte, i.e. 0-255
 		
-		for (int i = 0; i < imageWidth; i++) {				// run from top to bottom
+		for (int i = 0; i < imageWidth; i++) {			// run from top to bottom
 			for (int j = 0; j < imageHeight; j++) {			// run from left to right
+				//System.out.println(Integer.toString(i) + "  " + Integer.toString(j));
 				this.screen[i][j] = getColorForPix(i,j);
 			}
 		}
@@ -342,15 +345,44 @@ public class RayTracer {
 			}
 		} //for
 		if(flag > 0){
-			red = this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255;
-			green = this.scene.materials.get(shape.getMat_idx() -1 ).getDg() * 255;
-			blue = this.scene.materials.get(shape.getMat_idx() -1 ).getDb() * 255;
+			// get phong shading value.
+			//Vector camPosition = this.scene.getCam().getPosition();
+			Vector endPoint = ray.getP();
+			double phongShade = 1 - getPhongShade(this,endPoint);
+			// get base color by ray.
+			red = this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255 * phongShade;
+			green = this.scene.materials.get(shape.getMat_idx() -1 ).getDg() * 255 * phongShade;
+			blue = this.scene.materials.get(shape.getMat_idx() -1 ).getDb() * 255 * phongShade;
 		}
 		double [] ans = {red , green, blue};
 		return ans;
 	}
 
+	public double getPhongShade(RayTracer rayTracer, Vector endPoint) {
+		double ans = 0;
+		for (Light licht : rayTracer.scene.getLights()) {			
+			double t = endPoint.getDistanceScalar(licht.getPosition());
+			Vector p0 = endPoint;
+			Vector v = endPoint.sub(licht.getPosition());
+			Ray shadeRay = new Ray(t, p0, v);
+			
+			for (Shape sh : rayTracer.scene.getShapes()) {
+				if(shadeRay.inter(sh) > 0){
+					ans += rayTracer.scene.getMaterials().get(sh.getMat_idx() - 1).getTrans() * licht.getShadow();
+				}
+			}
+		}
+			if(ans >= 1 ){
+				ans = 1;
+			} else {
+				ans = ans;
+			}
+			return ans;
+	}
+	
 	//////////////////////// FUNCTIONS TO SAVE IMAGES IN PNG FORMAT //////////////////////////////////////////
+
+
 
 
 	/*
