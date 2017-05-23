@@ -66,6 +66,14 @@ public class Vector {
 		V.z = this.z*i;
 		return V;
 	}
+	
+	public Vector div(double i) {
+		Vector V = new Vector();
+		V.x = this.x/i;
+		V.y = this.y/i;
+		V.z = this.z/i;
+		return V;
+	}
 
 	public double getDistanceScalar(Vector position) {
 		double x = this.x - position.x;
