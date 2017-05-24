@@ -199,7 +199,7 @@ public class Ray {
 	}
 
 	public double inter(Triangle trng) {
-		Vector norm = trng.getNormal();
+		Vector norm = trng.getNormal(null);
 		Plane plane = trngToPlane(trng, norm);
 
 		double t = inter(plane);

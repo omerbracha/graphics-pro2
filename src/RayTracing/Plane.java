@@ -68,7 +68,7 @@ public class Plane extends Shape{
 	public void setMat_idx(int mat_idx) {
 		this.mat_idx = mat_idx;
 	}
-	public Vector getNormal() {
+	public Vector getNormal(Vector v) {
 		Vector vec = new Vector(this.nx, this.ny, this.nz);
 		return vec;
 	}

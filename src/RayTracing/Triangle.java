@@ -67,7 +67,7 @@ public class Triangle extends Shape{
 	public void setMat_idx(int mat_idx) {
 		this.mat_idx = mat_idx;
 	}
-	public Vector getNormal() {
+	public Vector getNormal(Vector v) {
 		Vector ab = new Vector(this.getP1x()-this.getP0x(), this.getP1y()-this.getP0y(), this.getP1z()-this.getP0z());
 		Vector ac = new Vector(this.getP2x()-this.getP0x(), this.getP2y()-this.getP0y(), this.getP2z()-this.getP0z());
 		ab.x = ab.x/ab.size;
