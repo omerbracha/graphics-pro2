@@ -349,16 +349,20 @@ public class RayTracer {
 			//
 			Material mat = this.scene.materials.get(shape.getMat_idx() -1 );
 			double Ir = 0;
+			double Ig = 0;
+			double Ib = 0;
 			double[] lightValues;
 			for(Light licht: this.scene.getLights()){
 				lightValues = getlightValues(endPoint,licht);
 				Ir += (mat.getDr() * (shape.getNormal().dot(ray.getV())) * lightValues[0]) + (mat.getSr() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[0]); // change value of power  
+				Ig += (mat.getDg() * (shape.getNormal().dot(ray.getV())) * lightValues[1]) + (mat.getSg() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[1]); // change value of power
+				Ib += (mat.getDb() * (shape.getNormal().dot(ray.getV())) * lightValues[2]) + (mat.getSb() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[2]); // change value of power
 			}
 
 			// get base color by ray.
-			red = 255*Ir;//this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255 * lightValues[0];
-			green = 255*Ir;//this.scene.materials.get(shape.getMat_idx() -1 ).getDg() * 255 * lightValues[1];
-			blue = 255*Ir;//this.scene.materials.get(shape.getMat_idx() -1 ).getDb() * 255 * lightValues[2];
+			red = 	255*Ir; //this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255 * lightValues[0];
+			green = 255*Ig; //this.scene.materials.get(shape.getMat_idx() -1 ).getDg() * 255 * lightValues[1];
+			blue = 	255*Ib; //this.scene.materials.get(shape.getMat_idx() -1 ).getDb() * 255 * lightValues[2];
 		}
 		double [] ans = {red , green, blue};
 		return ans;

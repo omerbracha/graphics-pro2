@@ -164,8 +164,10 @@ public abstract class Shape {
 		return null;
 	}
 	public Vector getR(Vector endPoint, Light licht) {
-		// TODO Auto-generated method stub
-		return null;
+		Vector d = endPoint.sub(licht.getPosition());
+		Vector n = this.getNormal(endPoint);
+		Vector r = d.sub(n.mult(2 * d.dot(n)));
+		return r;
 	}
 	
 }
