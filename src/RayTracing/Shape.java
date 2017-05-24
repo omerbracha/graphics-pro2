@@ -148,4 +148,9 @@ public abstract class Shape {
 		// TODO Auto-generated method stub
 		
 	}
+	public Vector getNormal() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }

@@ -54,6 +54,8 @@ public class Ray {
 		double sw = cam.getSw_from_cam();
 		double sd = cam.getSc_dist();
 		double sh = (sw/tracer.imageWidth) * tracer.imageHeight;
+		
+		/*
 		Vector lookat = cam.getLookat().sub(p0);
 		lookat = lookat.normalize();
 		double cosy = Math.cos(lookat.y);
@@ -74,12 +76,12 @@ public class Ray {
 		double Pz = cam.getSc_dist();
 		
 		Vector v = new Vector(Px,Py,Pz);
-		v = vecTimesMat(v, m);
-		
-		double Vx = v.x - p0.x;
-		double Vy = v.y - p0.y;
-		double Vz = v.z;
-		
+//		v = vecTimesMat(v, m);
+//		
+//		double Vx = v.x - p0.x;
+//		double Vy = v.y - p0.y;
+//		double Vz = v.z;
+//		*/
 		/*//////////////from ozeri slide//////////////
 		
 		Vector normal = p0.sub(cam.getLookat());
@@ -95,7 +97,7 @@ public class Ray {
 		
 		
 		
-		/*///////////////////with semi lookat//////////////////
+		///////////////////with semi lookat//////////////////
 		
 		Vector lookAt = cam.getLookat();
 		lookAt.x = lookAt.x - p0.x;
@@ -112,7 +114,7 @@ public class Ray {
 		double Vx = Px - p0.x;
 		double Vy = Py - p0.y;
 		double Vz = Pz;
-		*/
+		
 		
 		/*/////////without lookat///////////////////
 		
@@ -124,12 +126,12 @@ public class Ray {
 		double Vz = Pz;
 		*/
 		
-//		double size = Math.sqrt(Vx*Vx + Vy*Vy + Vz*Vz);
-//		Vector V = new Vector(Vx/size, Vy/size, Vz/size);
+		double size = Math.sqrt(Vx*Vx + Vy*Vy + Vz*Vz);
+		Vector V = new Vector(Vx/size, Vy/size, Vz/size);
 		
 		this.p0 = p0;
 		this.t = t;
-		this.v = new Vector(Vx, Vy, Vz);
+		this.v = V; //new Vector(Vx, Vy, Vz);
 	}
 	
 	private Vector vecTimesMat(Vector v1, double[][] m) {
