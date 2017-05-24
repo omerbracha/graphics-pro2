@@ -1,5 +1,7 @@
  package RayTracing;
 
+import Jama.Matrix;
+
 public class Ray {
 	public double t;		// intersection point
 	public Vector p0;		// start point
@@ -54,31 +56,41 @@ public class Ray {
 		double sw = cam.getSw_from_cam();
 		double sd = cam.getSc_dist();
 		double sh = (sw/tracer.imageWidth) * tracer.imageHeight;
-		Vector lookat = cam.getLookat().sub(p0);
-		lookat = lookat.normalize();
-		double cosy = Math.cos(lookat.y);
-		double siny = Math.sin(lookat.y);
-		double cosx = Math.cos(lookat.x);
-		double sinx = Math.sin(lookat.x);
 		
-		double[][] m = {{cosy,0,siny},{-sinx*siny,cosx,sinx*cosy},{-cosx*siny,-sinx,cosx*cosy}}; 
-		Vector v1 = new Vector(1,0,0);
-		Vector v2 = new Vector(0,1,0);
-		Vector v3 = new Vector(0,0,1);
-		Vector Vx1 = vecTimesMat(v1, m);
-		Vector Vy1 = vecTimesMat(v2, m);
-		Vector Vz1 = vecTimesMat(v3, m);
-		
-		double Px = cam.getpX() - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
-		double Py = cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
-		double Pz = cam.getSc_dist();
-		
-		Vector v = new Vector(Px,Py,Pz);
-		v = vecTimesMat(v, m);
-		
-		double Vx = v.x - p0.x;
-		double Vy = v.y - p0.y;
-		double Vz = v.z;
+//		
+//		Vector lookat = cam.getLookat().sub(p0);
+//		lookat = lookat.normalize();
+//		double cosy = Math.cos(lookat.y);
+//		double siny = Math.sin(lookat.y);
+//		double cosx = Math.cos(lookat.x);
+//		double sinx = Math.sin(lookat.x);
+//		double cosz = Math.cos(lookat.z);
+//		double sinz = Math.sin(lookat.z);
+//		
+//		//double[][] m = {{cosy*cosz,cosy*sinz,siny},{-sinx*siny*cosz+cosx*sinz,sinx*siny*sinz+cosz*cosx,sinx*cosy},{-cosz*cosx*siny-sinx*sinz,cosx*sinz*siny-sinx*cosz,cosx*cosy}};
+//		double[][] m = {{cosy,0,siny},{-sinx*siny,cosx,sinx*cosy},{-cosx*siny,-sinx,cosx*cosy}}; 
+//		Matrix mat = new Matrix(m);
+//		Matrix inverse = mat.inverse();
+//		Vector v1 = new Vector(1,0,0);
+//		Vector v2 = new Vector(0,1,0);
+//		Vector v3 = new Vector(0,0,1);
+//		Vector Vx1 = vecTimesMat(v1, m);
+//		Vector Vy1 = vecTimesMat(v2, m);
+//		Vector Vz1 = vecTimesMat(v3, m);
+//		
+//		double Px = - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
+//		double Py = - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
+//		
+//		//double Px = cam.getpX() - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
+//		//double Py = cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
+//		double Pz = cam.getSc_dist();
+//		
+//		Vector v = new Vector(Px,Py,Pz);
+//		
+//		double Vx = v.dot(Vx1);
+//		double Vy = v.dot(Vy1);
+//		double Vz = v.dot(Vz1);
+
 		
 		/*//////////////from ozeri slide//////////////
 		
@@ -95,7 +107,7 @@ public class Ray {
 		
 		
 		
-		/*///////////////////with semi lookat//////////////////
+		///////////////////with semi lookat//////////////////
 		
 		Vector lookAt = cam.getLookat();
 		lookAt.x = lookAt.x - p0.x;
@@ -112,7 +124,7 @@ public class Ray {
 		double Vx = Px - p0.x;
 		double Vy = Py - p0.y;
 		double Vz = Pz;
-		*/
+		
 		
 		/*/////////without lookat///////////////////
 		
@@ -123,13 +135,16 @@ public class Ray {
 		double Vy = Py - p0.y;
 		double Vz = Pz;
 		*/
+		//Vector V = new Vector(Vx, Vy, Vz);
+		//V = V.normalize();
+		//double[][] inv1 = inverse.getArray();
+		//V = vecTimesMat(V, inv1);
 		
-//		double size = Math.sqrt(Vx*Vx + Vy*Vy + Vz*Vz);
-//		Vector V = new Vector(Vx/size, Vy/size, Vz/size);
-		
+		double size = Math.sqrt(Vx*Vx + Vy*Vy + Vz*Vz);
+		Vector V = new Vector(Vx/size, Vy/size, Vz/size);
 		this.p0 = p0;
 		this.t = t;
-		this.v = new Vector(Vx, Vy, Vz);
+		this.v = V;
 	}
 	
 	private Vector vecTimesMat(Vector v1, double[][] m) {
