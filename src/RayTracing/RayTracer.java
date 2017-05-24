@@ -348,20 +348,57 @@ public class RayTracer {
 			// I = I_e + K_a*I_al + K_d * (N dot L) * I_l + K_s * (V dot R)^n * I_l
 			//
 			Material mat = this.scene.materials.get(shape.getMat_idx() -1 );
-			double[] lightValues = getlightValues(this,endPoint,shape); // all lights : [red,green,blue,phongShade value]
-
-			double Ir = (mat.getDr() * (shape.getNormal().dot(ray.getV())) * lightValues[0]) + mat.getSr() * Math.pow( shape.getR().dot(ray.getV())), 1) * lightValues[0]; // change value of power  
-			
+			double Ir = 0;
+			double[] lightValues;
+			for(Light licht: this.scene.getLights()){
+				lightValues = getlightValues(endPoint,licht);
+				Ir += (mat.getDr() * (shape.getNormal().dot(ray.getV())) * lightValues[0]) + (mat.getSr() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[0]); // change value of power  
+			}
 			
 			// get base color by ray.
-			red = this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255 * lightValues[0];
-			green = this.scene.materials.get(shape.getMat_idx() -1 ).getDg() * 255 * lightValues[1];
-			blue = this.scene.materials.get(shape.getMat_idx() -1 ).getDb() * 255 * lightValues[2];
+			red = 255*Ir;//this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255 * lightValues[0];
+			green = 255*Ir;//this.scene.materials.get(shape.getMat_idx() -1 ).getDg() * 255 * lightValues[1];
+			blue = 255*Ir;//this.scene.materials.get(shape.getMat_idx() -1 ).getDb() * 255 * lightValues[2];
 		}
 		double [] ans = {red , green, blue};
 		return ans;
 	}
 
+	private double[] getlightValues(Vector endPoint, Light licht) {
+		double[] ans = {0,0,0};
+		Vector v = endPoint.sub(licht.getPosition());
+		Vector p0 = endPoint.add(v.mult(0.5)) ; ////////TODO/////////////set added value/////////////////////	
+		double t = p0.getDistanceScalar(licht.getPosition());
+		Ray rayOfLight = new Ray(t, p0, v);
+		
+		for (Shape sh : this.scene.getShapes()) {
+			double hitDistance = rayOfLight.inter(sh);
+			
+			
+			if(hitDistance > 0 || hitDistance < t ){	// abstraction to that certain light source 
+				ans[0] += licht.getR() * (1 - licht.getShadow());
+				ans[1] += licht.getG() * (1 - licht.getShadow());
+				ans[2] += licht.getB() * (1 - licht.getShadow());
+				
+			} else { 									// no abstractions
+				ans[0] += licht.getR();
+				ans[1] += licht.getG();
+				ans[2] += licht.getB();
+			}
+		}
+	
+	for (int i = 0; i < 3; i++) {
+		if(ans[i] > 1 ){
+			ans[i] = 1;
+			System.out.println("overlighting in index - i");
+		}
+	}
+	return ans;
+	}
+
+
+	
+	
 	public double[] getlightValues(RayTracer rayTracer, Vector endPoint,Shape shape) {
 		double[] ans = {0,0,0};
 		for (Light licht : rayTracer.scene.getLights()) {

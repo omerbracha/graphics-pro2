@@ -163,5 +163,9 @@ public abstract class Shape {
 		}
 		return null;
 	}
+	public Vector getR(Vector endPoint, Light licht) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
