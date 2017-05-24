@@ -199,7 +199,7 @@ public class Ray {
 	}
 	
 	public double inter(Triangle trng) {
-		Vector norm = triangleToNorm(trng);
+		Vector norm = trng.getNormal();
 		Plane plane = trngToPlane(trng, norm);
 		
 		double t = inter(plane);
@@ -241,18 +241,18 @@ public class Ray {
 		return plane;
 	}
 
-	private Vector triangleToNorm(Triangle trng) {
-		Vector ab = new Vector(trng.getP1x()-trng.getP0x(), trng.getP1y()-trng.getP0y(), trng.getP1z()-trng.getP0z());
-		Vector ac = new Vector(trng.getP2x()-trng.getP0x(), trng.getP2y()-trng.getP0y(), trng.getP2z()-trng.getP0z());
-		ab.x = ab.x/ab.size;
-		ab.y = ab.y/ab.size;
-		ab.z = ab.z/ab.size;
-		ac.x = ac.x/ac.size;
-		ac.y = ac.y/ac.size;
-		ac.z = ac.z/ac.size;
-		Vector norm = ab.cross(ac);
-		return norm;
-	}
+//	private Vector triangleToNorm(Triangle trng) {
+//		Vector ab = new Vector(trng.getP1x()-trng.getP0x(), trng.getP1y()-trng.getP0y(), trng.getP1z()-trng.getP0z());
+//		Vector ac = new Vector(trng.getP2x()-trng.getP0x(), trng.getP2y()-trng.getP0y(), trng.getP2z()-trng.getP0z());
+//		ab.x = ab.x/ab.size;
+//		ab.y = ab.y/ab.size;
+//		ab.z = ab.z/ab.size;
+//		ac.x = ac.x/ac.size;
+//		ac.y = ac.y/ac.size;
+//		ac.z = ac.z/ac.size;
+//		Vector norm = ab.cross(ac);
+//		return norm;
+//	}
 
 	public double interDist(double t_hc, double t_ca) {
 		

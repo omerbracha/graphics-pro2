@@ -149,7 +149,18 @@ public abstract class Shape {
 		
 	}
 	public Vector getNormal() {
-		// TODO Auto-generated method stub
+		if (this.getClass() == Sphere.class) {
+			Sphere sph = (Sphere) this;
+			return sph.getNormal();
+		}
+		if (this.getClass() == Triangle.class) {
+			Triangle trn = (Triangle) this;
+			return trn.getNormal();
+		}
+		if (this.getClass() == Plane.class) {
+			Plane pln = (Plane) this;
+			return pln.getNormal();
+		}
 		return null;
 	}
 	
