@@ -25,47 +25,47 @@ public class RayTracer {
 	public int cnt_mtl = 0, cnt_pln = 0 ,cnt_sph = 0 ,cnt_lgt = 0;
 	public Scene scene = new Scene();
 	private double[][][] screen; //TODO- change int? 
-	
+
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
 	 */
-	
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////            main                 /////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	public static void main(String[] args) {
 
 		try {
 
 			RayTracer tracer = new RayTracer();
-			
+
 			// Default values:
 			tracer.imageWidth = 500;
 			tracer.imageHeight = 500;
 			if (args.length < 2)
 				throw new RayTracerException("Not enough arguments provided. Please specify an input scene file and an output image file for rendering.");
-			
+
 			String sceneFileName = args[0];
 			String outputFileName = args[1];
 
-			
+
 			if (args.length > 3)
 			{
 				tracer.imageWidth = Integer.parseInt(args[2]);
 				tracer.imageHeight = Integer.parseInt(args[3]);
 			}
-			
+
 			//Create screen:
 			tracer.screen = new double[tracer.imageWidth][tracer.imageHeight][3];
 
 			// Parse scene file:
 			tracer.parseScene(sceneFileName);
-			
+
 			// Render scene:
 			tracer.renderScene(outputFileName);
 
-			
+
 			//		} catch (IOException e) {
 			//			System.out.println(e.getMessage());
 		} catch (RayTracerException e) {
@@ -82,7 +82,7 @@ public class RayTracer {
 	public void parseScene(String sceneFileName) throws IOException, RayTracerException
 	{
 		FileReader fr = new FileReader(sceneFileName);
-		
+
 		BufferedReader r = new BufferedReader(fr);
 		String line = null;
 		int lineNum = 0;
@@ -117,9 +117,9 @@ public class RayTracer {
 					cam.setUvZ(Integer.parseInt(params[8]));		// set up vector z
 					cam.setSc_dist(Double.parseDouble(params[9])); 	//set up distance from view 
 					cam.setSw_from_cam(Integer.parseInt(params[10]));//set up width from view
-					
+
 					scene.setCam(cam); 								// set camera to scene 
-					
+
 					System.out.println(String.format("Parsed camera parameters (line %d)", lineNum));
 				}
 				else if (code.equals("set"))
@@ -131,15 +131,15 @@ public class RayTracer {
 					set.setBgb(Double.parseDouble(params[2])); 		//B background color.
 					set.setSh_rays(Integer.parseInt(params[3])); 	//root number of shadow rays.
 					set.setRec_max(Integer.parseInt(params[4])); 	//maximum recursion.
-					
+
 					if(params.length > 5){
-					set.setSS(Integer.parseInt(params[5])); 		//super sampling level.
+						set.setSS(Integer.parseInt(params[5])); 		//super sampling level.
 					} else {
 						set.setSS(2);
 					}
-					
+
 					scene.setMySet(set); 							// set the setting
-					
+
 					System.out.println(String.format("Parsed general settings (line %d)", lineNum));
 				}
 				else if (code.equals("mtl"))
@@ -158,9 +158,9 @@ public class RayTracer {
 					mat.setRb(Double.parseDouble(params[8]));
 					mat.setPhong(Float.parseFloat(params[9]));
 					mat.setTrans(Double.parseDouble(params[10]));
-					
+
 					scene.setMaterial(mat);
-					
+
 					System.out.println(String.format("Parsed material (line %d)", lineNum));
 				}
 				else if (code.equals("sph"))
@@ -175,7 +175,7 @@ public class RayTracer {
 					sphere.setRadius(Double.parseDouble(params[3])); 	// radius
 					sphere.setMat_idx(Integer.parseInt(params[4]));	// material index number
 					scene.getShapes().add(sphere); 				// add a sphere to the sphere list. 
-					
+
 					System.out.println(String.format("Parsed sphere (line %d)", lineNum));
 				}
 				else if (code.equals("pln")) {
@@ -188,12 +188,12 @@ public class RayTracer {
 					pln.setOffset(Double.parseDouble(params[3]));
 					pln.setMat_idx(Integer.parseInt(params[4]));
 					scene.getShapes().add(pln);						// add a plane to the pln list.
-					
+
 					System.out.println(String.format("Parsed plane (line %d)", lineNum));
 				}
 				else if (code.equals("trg"))
 				{
-					
+
 					Shape trg = new Triangle();
 					trg.setMat_idx(cnt_mtl);
 					cnt_mtl++;
@@ -207,9 +207,9 @@ public class RayTracer {
 					trg.setP2y(Double.parseDouble(params[7]));
 					trg.setP2z(Double.parseDouble(params[8]));
 					trg.setMat_idx(Integer.parseInt(params[9]));
-					
+
 					scene.getShapes().add(trg);
-					
+
 					System.out.println(String.format("Parsed cylinder (line %d)", lineNum)); //TODO 
 				}
 				else if (code.equals("lgt"))
@@ -226,9 +226,9 @@ public class RayTracer {
 					lict.setSpec(Double.parseDouble(params[6]));	// specular
 					lict.setShadow(Double.parseDouble(params[7]));	// shadow
 					lict.setWidth(Integer.parseInt(params[8]));		// width
-					
+
 					scene.getLights().add(lict);
-					
+
 					System.out.println(String.format("Parsed light (line %d)", lineNum));
 				}
 				else
@@ -237,14 +237,14 @@ public class RayTracer {
 				}
 			}
 		}
-		
+
 		// It is recommended that you check here that the scene is valid,
 		// for example camera settings and all necessary materials were defined.
-		
+
 		if(scene.cam == null || scene.mySet == null){
 			System.err.println("no camera or set in file");
 		}
-		
+
 		System.out.println("Finished parsing scene file " + sceneFileName);
 	}
 
@@ -266,17 +266,17 @@ public class RayTracer {
 		//             blue component is in rgbData[(y * this.imageWidth + x) * 3 + 2]
 		//
 		// Each of the red, green and blue components should be a byte, i.e. 0-255
-		
+
 		for (int i = 0; i < imageWidth; i++) {			// run from top to bottom
 			for (int j = 0; j < imageHeight; j++) {			// run from left to right
 				//System.out.println(Integer.toString(i) + "  " + Integer.toString(j));
 				this.screen[i][j] = getColorForPix(i,j);
 			}
 		}
-		
+
 		int weight = this.imageWidth;
 		int height = this.imageHeight;
-		
+
 		int p = 0;
 		for (int i = weight - 1; i >= 0; i--) {
 			for (int j = 0; j < height; j++) {
@@ -286,12 +286,12 @@ public class RayTracer {
 				}
 			}
 		}
-		
+
 		long endTime = System.currentTimeMillis();
 		Long renderTime = endTime - startTime;
 
 		//saveImage(this.imageWidth, rgbData, outputFileName);
-		
+
 		// The time is measured for your own conveniece, rendering speed will not affect your score
 		// unless it is exceptionally slow (more than a couple of minutes)
 		System.out.println("Finished rendering scene in " + renderTime.toString() + " milliseconds.");
@@ -302,9 +302,9 @@ public class RayTracer {
 		System.out.println("Saved file " + outputFileName);
 
 	}
-	
-	
-	
+
+
+
 	//////////////////////// Utilities functions //////////////////////////////
 	private double[] getColorForPix(int topBottom, int leftRight) {
 		int red = 0, green = 0,blue = 0;
@@ -322,7 +322,7 @@ public class RayTracer {
 		ans[0] = (int) (red /(size*size));				// add average color
 		ans[1] = (int) (green/(size*size));				// add average color
 		ans[2] = (int) (blue/(size*size));				// add average color
-				
+
 		return ans;
 	}
 
@@ -343,7 +343,7 @@ public class RayTracer {
 			}
 		}
 		if(flag > 0) { 				// hit something 
-			
+
 			Vector endPoint = ray.getP();
 			// I = I_e + K_a*I_al + K_d * (N dot L) * I_l + K_s * (V dot R)^n * I_l
 			//
@@ -354,7 +354,7 @@ public class RayTracer {
 				lightValues = getlightValues(endPoint,licht);
 				Ir += (mat.getDr() * (shape.getNormal().dot(ray.getV())) * lightValues[0]) + (mat.getSr() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[0]); // change value of power  
 			}
-			
+
 			// get base color by ray.
 			red = 255*Ir;//this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255 * lightValues[0];
 			green = 255*Ir;//this.scene.materials.get(shape.getMat_idx() -1 ).getDg() * 255 * lightValues[1];
@@ -370,35 +370,35 @@ public class RayTracer {
 		Vector p0 = endPoint.add(v.mult(0.5)) ; ////////TODO/////////////set added value/////////////////////	
 		double t = p0.getDistanceScalar(licht.getPosition());
 		Ray rayOfLight = new Ray(t, p0, v);
-		
+
 		for (Shape sh : this.scene.getShapes()) {
 			double hitDistance = rayOfLight.inter(sh);
-			
-			
+
+
 			if(hitDistance > 0 || hitDistance < t ){	// abstraction to that certain light source 
 				ans[0] += licht.getR() * (1 - licht.getShadow());
 				ans[1] += licht.getG() * (1 - licht.getShadow());
 				ans[2] += licht.getB() * (1 - licht.getShadow());
-				
+
 			} else { 									// no abstractions
 				ans[0] += licht.getR();
 				ans[1] += licht.getG();
 				ans[2] += licht.getB();
 			}
 		}
-	
-	for (int i = 0; i < 3; i++) {
-		if(ans[i] > 1 ){
-			ans[i] = 1;
-			System.out.println("overlighting in index - i");
+
+		for (int i = 0; i < 3; i++) {
+			if(ans[i] > 1 ){
+				ans[i] = 1;
+				System.out.println("overlighting in index - i");
+			}
 		}
-	}
-	return ans;
+		return ans;
 	}
 
 
-	
-	
+
+
 	public double[] getlightValues(RayTracer rayTracer, Vector endPoint,Shape shape) {
 		double[] ans = {0,0,0};
 		for (Light licht : rayTracer.scene.getLights()) {
@@ -406,16 +406,16 @@ public class RayTracer {
 			Vector p0 = endPoint.add(v.mult(0.5)) ; ////////TODO/////////////set added value/////////////////////	
 			double t = p0.getDistanceScalar(licht.getPosition());
 			Ray rayOfLight = new Ray(t, p0, v);
-			
+
 			for (Shape sh : rayTracer.scene.getShapes()) {
 				double hitDistance = rayOfLight.inter(sh);
-				
-				
+
+
 				if(hitDistance > 0 || hitDistance < t ){	// abstraction to that certain light source 
 					ans[0] += licht.getR() * (1 - licht.getShadow());
 					ans[1] += licht.getG() * (1 - licht.getShadow());
 					ans[2] += licht.getB() * (1 - licht.getShadow());
-					
+
 				} else { 									// no abstractions
 					ans[0] += licht.getR();
 					ans[1] += licht.getG();
@@ -431,7 +431,7 @@ public class RayTracer {
 		}
 		return ans;
 	}
-	
+
 	//////////////////////// FUNCTIONS TO SAVE IMAGES IN PNG FORMAT //////////////////////////////////////////
 
 	/*
