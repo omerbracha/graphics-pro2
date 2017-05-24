@@ -81,6 +81,11 @@ public class Sphere extends Shape{
 	public Vector getPos() {
 		return new Vector(getCx(), getCy(), getCz());
 	}
+	public Vector getNormal(Vector p) {
+		Vector n = p.sub(this.getPos());
+		n = n.normalize();
+		return n;
+	}
 	
 	
 }
