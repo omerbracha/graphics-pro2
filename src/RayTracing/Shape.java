@@ -163,8 +163,8 @@ public abstract class Shape {
 		}
 		return null;
 	}
-	public Vector getR(Vector endPoint, Light licht) {
-		Vector d = endPoint.sub(licht.getPosition());
+	public Vector getR(Vector endPoint, Vector vec) {
+		Vector d = endPoint.sub(vec);
 		Vector n = this.getNormal(endPoint);
 		Vector r = d.sub(n.mult(2 * d.dot(n)));
 		r = r.normalize();
