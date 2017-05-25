@@ -13,8 +13,8 @@ mtl		0	0	0	1	1	1	0.9	0.9	0.9	100	0
 
 # Sphere:	cx   	cy   	cz  	radius 	mat_idx
 sph		0.5  	0.1    	0   	0.5    	1
-#sph		-0.3 	-0.3    0   	0.4    	4
-#sph		0.14 	0.02 	-0.5	0.2    	2
+sph		-0.3 	-0.3    0   	0.4    	4
+sph		0.14 	0.02 	-0.5	0.2    	2
 
 # Plane:	nx	ny	nz	offset	mat_idx	
 pln		0	1	0	-1	3

@@ -329,7 +329,8 @@ public class RayTracer {
 	private double[] sampleColorByRay(int TopBottom, int leftRight, int i, int j) {
 		double t = 0;
 		int flag = 0;
-		double red = 255,green = 255,blue = 255; // TODO - default value is white? Spouse to never happen that stays without change
+		MySet set = this.scene.getMySet();
+		double red = 255*set.getBgr(),green = 255*set.getBgg(),blue = 255*set.getBgb(); // TODO - default value is white? Spouse to never happen that stays without change
 		Shape shape = new Shape() {}; 
 		Ray ray = new Ray();
 		ray.cameraRay(this, TopBottom, leftRight, i, j);
@@ -348,7 +349,6 @@ public class RayTracer {
 			// I = I_e + K_a*I_al + K_d * (N dot L) * I_l + K_s * (V dot R)^n * I_l
 
 			Material mat = this.scene.materials.get(shape.getMat_idx() -1 );
-			MySet set = this.scene.getMySet();
 			double Ir = set.getBgr()*mat.getTrans();
 			double Ig = set.getBgg()*mat.getTrans();
 			double Ib = set.getBgb()*mat.getTrans();
