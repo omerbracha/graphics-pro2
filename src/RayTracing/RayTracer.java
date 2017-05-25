@@ -348,9 +348,10 @@ public class RayTracer {
 			// I = I_e + K_a*I_al + K_d * (N dot L) * I_l + K_s * (V dot R)^n * I_l
 
 			Material mat = this.scene.materials.get(shape.getMat_idx() -1 );
-			double Ir = 0;
-			double Ig = 0;
-			double Ib = 0;
+			MySet set = this.scene.getMySet();
+			double Ir = set.getBgr()*mat.getTrans();
+			double Ig = set.getBgg()*mat.getTrans();
+			double Ib = set.getBgb()*mat.getTrans();
 			double[] lightValues;
 			for(Light licht: this.scene.getLights()){
 				lightValues = getlightValues(endPoint,licht,shape);
@@ -363,12 +364,11 @@ public class RayTracer {
 			
 			
 			}
-			
 			// reflection
-			Vector I = getReflectionColor(endPoint, ray, shape, 4);
+			Vector I = getReflectionColor(endPoint, ray, shape, this.scene.getMySet().getRec_max());
 			Ir += mat.getRr()* I.x;
-			Ig += mat.getRr()* I.y;
-			Ib += mat.getRr()* I.z;
+			Ig += mat.getRg()* I.y;
+			Ib += mat.getRb()* I.z;
 
 			// get base color by ray.
 			red = 	255*Ir; //this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255 * lightValues[0];
@@ -393,7 +393,12 @@ public class RayTracer {
 		
 		Vector r = shape.getR(endPoint, ray.getP0());
 		Ray recRay = new Ray(Double.POSITIVE_INFINITY, endPoint, r);
-		Vector I = new Vector(0,0,0);
+		Material mat = this.scene.materials.get(shape.getMat_idx() -1 );
+		MySet set = this.scene.getMySet();
+		double Ir = set.getBgr()*mat.getTrans();
+		double Ig = set.getBgg()*mat.getTrans();
+		double Ib = set.getBgb()*mat.getTrans();
+		Vector I = new Vector(Ir,Ig,Ib);
 		double t = 0;
 		int flag = 0;
 		
@@ -415,10 +420,11 @@ public class RayTracer {
 
 			// I = I_e + K_a*I_al + K_d * (N dot L) * I_l + K_s * (V dot R)^n * I_l
 
-			Material mat = this.scene.materials.get(shape.getMat_idx() -1 );
-			double Ir = 0;
-			double Ig = 0;
-			double Ib = 0;
+			mat = this.scene.materials.get(shape.getMat_idx() -1 );
+			set = this.scene.getMySet();
+			Ir = set.getBgr()*mat.getTrans();
+			Ig = set.getBgg()*mat.getTrans();
+			Ib = set.getBgb()*mat.getTrans();
 			double[] lightValues;
 			for(Light licht: this.scene.getLights()){
 				lightValues = getlightValues(p,licht,shape);
