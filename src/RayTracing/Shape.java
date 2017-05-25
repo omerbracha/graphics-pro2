@@ -167,6 +167,7 @@ public abstract class Shape {
 		Vector d = endPoint.sub(licht.getPosition());
 		Vector n = this.getNormal(endPoint);
 		Vector r = d.sub(n.mult(2 * d.dot(n)));
+		r = r.normalize();
 		return r;
 	}
 	
