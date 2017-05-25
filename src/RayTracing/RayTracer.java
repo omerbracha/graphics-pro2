@@ -350,7 +350,7 @@ public class RayTracer {
 
 			Material mat = this.scene.materials.get(shape.getMat_idx() -1 );
 			set = this.scene.getMySet();
-			Vector backColor = getBackgroundColor(shape,endPoint,ray);
+			Vector backColor = getBackgroundColor(shape,endPoint,ray, set.getRec_max());
 			double Ir = backColor.x *mat.getTrans();
 			double Ig = backColor.y *mat.getTrans();
 			double Ib = backColor.z *mat.getTrans();
@@ -390,31 +390,35 @@ public class RayTracer {
 		return ans;
 	}
 
-	private Vector getBackgroundColor(Shape shape, Vector endPoint, Ray ray) {
-		Vector ans = new Vector();
+	private Vector getBackgroundColor(Shape shape, Vector endPoint, Ray ray, int n) {
 		Ray newRay = new Ray(Double.POSITIVE_INFINITY,endPoint,ray.getV());
 		MySet set = this.scene.getMySet();
 		double red = 255*set.getBgr(),green = 255*set.getBgg(),blue = 255*set.getBgb();
+		Vector ans = new Vector(red,green,blue);
 		double t = 0;
 		int flag = 0;
+	
+		if(n == 0 ){ //finish recursion
+			return(ans);
+		}
 		for (Shape sh : this.scene.getShapes()) {
 			if(sh != shape){
-				if((t = ray.inter(sh)) > 0 ){
-					if (t < ray.t ) {  
-						ray.t = t;
+				if((t = newRay.inter(sh)) > 0 ){
+					if (t < newRay.t ) {  
+						newRay.t = t;
 						shape = sh;
 						flag = 1;		// hit  
 					}
 				}
 			}
 		}
+		Vector newEndPoint = newRay.getP();
+		Material mat = this.scene.materials.get(shape.getMat_idx() -1 );
 			if(flag > 0) { 				// hit something 
 
-				Vector newEndPoint = ray.getP();
 				// I = I_e + K_a*I_al + K_d * (N dot L) * I_l + K_s * (V dot R)^n * I_l
 
-				Material mat = this.scene.materials.get(shape.getMat_idx() -1 );
-				Vector backColor = getBackgroundColor(shape,newEndPoint,ray);
+				Vector backColor = getBackgroundColor(shape,newEndPoint,newRay, n);
 				double Ir = backColor.x *mat.getTrans();
 				double Ig = backColor.y *mat.getTrans();
 				double Ib = backColor.z *mat.getTrans();
@@ -424,13 +428,13 @@ public class RayTracer {
 					Vector v = licht.getPosition().sub(newEndPoint);
 					v = v.normalize();
 
-					Ir += (mat.getDr() * (shape.getNormal(newEndPoint).dot(v) ) * lightValues[0]) + (mat.getSr() * Math.pow( shape.getR(newEndPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[0]); // change value of power  
-					Ig += (mat.getDg() * (shape.getNormal(newEndPoint).dot(v) ) * lightValues[1]) + (mat.getSg() * Math.pow( shape.getR(newEndPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[1]); // change value of power
-					Ib += (mat.getDb() * (shape.getNormal(newEndPoint).dot(v) ) * lightValues[2]) + (mat.getSb() * Math.pow( shape.getR(newEndPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[2]); // change value of power
+					Ir += (mat.getDr() * (shape.getNormal(newEndPoint).dot(v) ) * lightValues[0]) + (mat.getSr() * Math.pow( shape.getR(newEndPoint,licht.getPosition()).dot(newRay.getV()), mat.getPhong()) * lightValues[0]); // change value of power  
+					Ig += (mat.getDg() * (shape.getNormal(newEndPoint).dot(v) ) * lightValues[1]) + (mat.getSg() * Math.pow( shape.getR(newEndPoint,licht.getPosition()).dot(newRay.getV()), mat.getPhong()) * lightValues[1]); // change value of power
+					Ib += (mat.getDb() * (shape.getNormal(newEndPoint).dot(v) ) * lightValues[2]) + (mat.getSb() * Math.pow( shape.getR(newEndPoint,licht.getPosition()).dot(newRay.getV()), mat.getPhong()) * lightValues[2]); // change value of power
 				}
 				
 				// reflection
-				Vector I = getReflectionColor(newEndPoint, ray, shape, this.scene.getMySet().getRec_max());
+				Vector I = getReflectionColor(newEndPoint, newRay, shape, this.scene.getMySet().getRec_max());
 				Ir += mat.getRr()* I.x;
 				Ig += mat.getRg()* I.y;
 				Ib += mat.getRb()* I.z;
@@ -448,6 +452,8 @@ public class RayTracer {
 				if(blue > 255) { //|| green > 255 || blue > 255){
 					blue = 255;
 				}
+			} else {
+				return ans;
 			}
 			
 			ans.x = red;
