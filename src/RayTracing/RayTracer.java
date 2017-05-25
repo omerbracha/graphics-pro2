@@ -353,88 +353,103 @@ public class RayTracer {
 			double Ib = 0;
 			double[] lightValues;
 			for(Light licht: this.scene.getLights()){
-				lightValues = getlightValues(endPoint,licht);
-				Ir += (mat.getDr() * (shape.getNormal(endPoint).dot(ray.getV())) * lightValues[0]) + (mat.getSr() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[0]); // change value of power  
-				Ig += (mat.getDg() * (shape.getNormal(endPoint).dot(ray.getV())) * lightValues[1]) + (mat.getSg() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[1]); // change value of power
-				Ib += (mat.getDb() * (shape.getNormal(endPoint).dot(ray.getV())) * lightValues[2]) + (mat.getSb() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[2]); // change value of power
+				lightValues = getlightValues(endPoint,licht,shape);
+				Vector v = licht.getPosition().sub(endPoint);
+				v = v.normalize();
+
+				Ir += (mat.getDr() * (shape.getNormal(endPoint).dot(v) ) * lightValues[0]); //+ (mat.getSr() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[0]); // change value of power  
+				Ig += (mat.getDg() * (shape.getNormal(endPoint).dot(v) ) * lightValues[1]); //+ (mat.getSg() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[1]); // change value of power
+				Ib += (mat.getDb() * (shape.getNormal(endPoint).dot(v) ) * lightValues[2]); //+ (mat.getSb() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[2]); // change value of power
 			}
 
 			// get base color by ray.
 			red = 	255*Ir; //this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255 * lightValues[0];
 			green = 255*Ig; //this.scene.materials.get(shape.getMat_idx() -1 ).getDg() * 255 * lightValues[1];
 			blue = 	255*Ib; //this.scene.materials.get(shape.getMat_idx() -1 ).getDb() * 255 * lightValues[2];
+			if(red > 255) { //|| green > 255 || blue > 255){
+				red = 255;
+			}
+			if(green > 255) { //|| green > 255 || blue > 255){
+				green = 255;
+			}
+			if(blue > 255) { //|| green > 255 || blue > 255){
+				blue = 255;
+			}
 		}
+		
+		
 		double [] ans = {red , green, blue};
 		return ans;
 	}
 
-	private double[] getlightValues(Vector endPoint, Light licht) {
+	private double[] getlightValues(Vector endPoint, Light licht, Shape OriginalShape) {
 		double[] ans = {0,0,0};
-		Vector v = endPoint.sub(licht.getPosition());
-		Vector p0 = endPoint.add(v.mult(0.5)) ; ////////TODO/////////////set added value/////////////////////	
+		Vector v = licht.getPosition().sub(endPoint);
+		v = v.normalize();
+		Vector p0 = endPoint;//endPoint.add(v.mult(0.5)) ; ////////TODO/////////////set added value/////////////////////	
 		double t = p0.getDistanceScalar(licht.getPosition());
 		Ray rayOfLight = new Ray(t, p0, v);
-
+		Vector normal = OriginalShape.getNormal(endPoint);
+		double denominator = normal.x + normal.y*t + normal.z*t*t;
 		for (Shape sh : this.scene.getShapes()) {
 			double hitDistance = rayOfLight.inter(sh);
 
-
 			if(hitDistance > 0 || hitDistance < t ){	// abstraction to that certain light source 
-				ans[0] += licht.getR() * (1 - licht.getShadow());
-				ans[1] += licht.getG() * (1 - licht.getShadow());
-				ans[2] += licht.getB() * (1 - licht.getShadow());
+				ans[0] += licht.getR();// / denominator;
+				ans[1] += licht.getG();// / denominator;
+				ans[2] += licht.getB();// / denominator;
+				
+//				ans[0] += licht.getR() * (1 - licht.getShadow());
+//				ans[1] += licht.getG() * (1 - licht.getShadow());
+//				ans[2] += licht.getB() * (1 - licht.getShadow());
 
 			} else { 									// no abstractions
-				ans[0] += licht.getR();
-				ans[1] += licht.getG();
-				ans[2] += licht.getB();
+				ans[0] += licht.getR();// / denominator;
+				ans[1] += licht.getG();// / denominator;
+				ans[2] += licht.getB();// / denominator;
 			}
 		}
 
 		for (int i = 0; i < 3; i++) {
-			if(ans[i] > 1 ){
+			if (ans[i] > 1 ) {
 				ans[i] = 1;
-				System.out.println("overlighting in index - i");
+				//System.out.println("overlighting in index - i");
 			}
 		}
 		return ans;
 	}
 
-
-
-
-	public double[] getlightValues(RayTracer rayTracer, Vector endPoint,Shape shape) {
-		double[] ans = {0,0,0};
-		for (Light licht : rayTracer.scene.getLights()) {
-			Vector v = endPoint.sub(licht.getPosition());
-			Vector p0 = endPoint.add(v.mult(0.5)) ; ////////TODO/////////////set added value/////////////////////	
-			double t = p0.getDistanceScalar(licht.getPosition());
-			Ray rayOfLight = new Ray(t, p0, v);
-
-			for (Shape sh : rayTracer.scene.getShapes()) {
-				double hitDistance = rayOfLight.inter(sh);
-
-
-				if(hitDistance > 0 || hitDistance < t ){	// abstraction to that certain light source 
-					ans[0] += licht.getR() * (1 - licht.getShadow());
-					ans[1] += licht.getG() * (1 - licht.getShadow());
-					ans[2] += licht.getB() * (1 - licht.getShadow());
-
-				} else { 									// no abstractions
-					ans[0] += licht.getR();
-					ans[1] += licht.getG();
-					ans[2] += licht.getB();
-				}
-			}
-		}
-		for (int i = 0; i < 3; i++) {
-			if(ans[i] > 1 ){
-				ans[i] = 1;
-				System.out.println("overlighting in index - i");
-			}
-		}
-		return ans;
-	}
+//	public double[] getlightValues(RayTracer rayTracer, Vector endPoint,Shape shape) {
+//		double[] ans = {0,0,0};
+//		for (Light licht : rayTracer.scene.getLights()) {
+//			Vector v = endPoint.sub(licht.getPosition());
+//			Vector p0 = endPoint.add(v.mult(0.5)) ; ////////TODO/////////////set added value/////////////////////	
+//			double t = p0.getDistanceScalar(licht.getPosition());
+//			Ray rayOfLight = new Ray(t, p0, v);
+//
+//			for (Shape sh : rayTracer.scene.getShapes()) {
+//				double hitDistance = rayOfLight.inter(sh);
+//
+//				if(hitDistance > 0 || hitDistance < t ){	// abstraction to that certain light source 
+//					ans[0] += licht.getR() * (1 - licht.getShadow());
+//					ans[1] += licht.getG() * (1 - licht.getShadow());
+//					ans[2] += licht.getB() * (1 - licht.getShadow());
+//
+//				} else { 									// no abstractions
+//					ans[0] += licht.getR();
+//					ans[1] += licht.getG();
+//					ans[2] += licht.getB();
+//				}
+//			}
+//		}
+//		for (int i = 0; i < 3; i++) {
+//			if(ans[i] > 1 ){
+//				ans[i] = 1;
+//				System.out.println("overlighting in index - i");
+//			}
+//		}
+//		return ans;
+//	}
 
 	//////////////////////// FUNCTIONS TO SAVE IMAGES IN PNG FORMAT //////////////////////////////////////////
 
