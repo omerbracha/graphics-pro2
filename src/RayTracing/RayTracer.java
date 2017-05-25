@@ -349,9 +349,10 @@ public class RayTracer {
 
 			Material mat = this.scene.materials.get(shape.getMat_idx() -1 );
 			MySet set = this.scene.getMySet();
-			double Ir = set.getBgr()*mat.getTrans();
-			double Ig = set.getBgg()*mat.getTrans();
-			double Ib = set.getBgb()*mat.getTrans();
+			Vector backColor = getBackgroundColor(shape,endPoint,ray);
+			double Ir = backColor.x *mat.getTrans();
+			double Ig = backColor.y *mat.getTrans();
+			double Ib = backColor.z *mat.getTrans();
 			double[] lightValues;
 			for(Light licht: this.scene.getLights()){
 				lightValues = getlightValues(endPoint,licht,shape);
@@ -361,9 +362,8 @@ public class RayTracer {
 				Ir += (mat.getDr() * (shape.getNormal(endPoint).dot(v) ) * lightValues[0]) + (mat.getSr() * Math.pow( shape.getR(endPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[0]); // change value of power  
 				Ig += (mat.getDg() * (shape.getNormal(endPoint).dot(v) ) * lightValues[1]) + (mat.getSg() * Math.pow( shape.getR(endPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[1]); // change value of power
 				Ib += (mat.getDb() * (shape.getNormal(endPoint).dot(v) ) * lightValues[2]) + (mat.getSb() * Math.pow( shape.getR(endPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[2]); // change value of power
-			
-			
 			}
+			
 			// reflection
 			Vector I = getReflectionColor(endPoint, ray, shape, this.scene.getMySet().getRec_max());
 			Ir += mat.getRr()* I.x;
@@ -386,6 +386,72 @@ public class RayTracer {
 		}
 		
 		double [] ans = {red , green, blue};
+		return ans;
+	}
+
+	private Vector getBackgroundColor(Shape shape, Vector endPoint, Ray ray) {
+		Vector ans = new Vector();
+		Ray newRay = new Ray(Double.POSITIVE_INFINITY,endPoint,ray.getV());
+		double t = 0;
+		int flag = 0;
+		for (Shape sh : this.scene.getShapes()) {
+			if(sh != shape){
+				if((t = ray.inter(sh)) > 0 ){
+					if (t < ray.t ) {  
+						ray.t = t;
+						shape = sh;
+						flag = 1;		// hit  
+					}
+				}
+			}
+		}
+			if(flag > 0) { 				// hit something 
+
+				Vector newEndPoint = ray.getP();
+				// I = I_e + K_a*I_al + K_d * (N dot L) * I_l + K_s * (V dot R)^n * I_l
+
+				Material mat = this.scene.materials.get(shape.getMat_idx() -1 );
+				MySet set = this.scene.getMySet();
+				Vector backColor = getBackgroundColor(shape,newEndPoint,ray);
+				double Ir = backColor.x *mat.getTrans();
+				double Ig = backColor.y *mat.getTrans();
+				double Ib = backColor.z *mat.getTrans();
+				double[] lightValues;
+				for(Light licht: this.scene.getLights()){
+					lightValues = getlightValues(newEndPoint,licht,shape);
+					Vector v = licht.getPosition().sub(newEndPoint);
+					v = v.normalize();
+
+					Ir += (mat.getDr() * (shape.getNormal(newEndPoint).dot(v) ) * lightValues[0]) + (mat.getSr() * Math.pow( shape.getR(newEndPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[0]); // change value of power  
+					Ig += (mat.getDg() * (shape.getNormal(newEndPoint).dot(v) ) * lightValues[1]) + (mat.getSg() * Math.pow( shape.getR(newEndPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[1]); // change value of power
+					Ib += (mat.getDb() * (shape.getNormal(newEndPoint).dot(v) ) * lightValues[2]) + (mat.getSb() * Math.pow( shape.getR(newEndPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[2]); // change value of power
+				}
+				
+				// reflection
+				Vector I = getReflectionColor(newEndPoint, ray, shape, this.scene.getMySet().getRec_max());
+				Ir += mat.getRr()* I.x;
+				Ig += mat.getRg()* I.y;
+				Ib += mat.getRb()* I.z;
+
+				// get base color by ray.
+				red = 	255*Ir; //this.scene.materials.get(shape.getMat_idx() -1 ).getDr() * 255 * lightValues[0];
+				green = 255*Ig; //this.scene.materials.get(shape.getMat_idx() -1 ).getDg() * 255 * lightValues[1];
+				blue = 	255*Ib; //this.scene.materials.get(shape.getMat_idx() -1 ).getDb() * 255 * lightValues[2];
+				if(red > 255) { //|| green > 255 || blue > 255){
+					red = 255;
+				}
+				if(green > 255) { //|| green > 255 || blue > 255){
+					green = 255;
+				}
+				if(blue > 255) { //|| green > 255 || blue > 255){
+					blue = 255;
+				}
+			}
+			
+			double [] ans = {red , green, blue};
+			return ans;
+	
+			
 		return ans;
 	}
 
