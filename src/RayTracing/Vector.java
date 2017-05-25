@@ -82,5 +82,13 @@ public class Vector {
 		return Math.sqrt(x*x + y*y + z*z);
 	}
 
+	public Vector dotByPart(Vector that) {
+		Vector ans = new Vector();
+		ans.x = this.x * that.x;
+		ans.y = this.y * that.y;
+		ans.z = this.z * that.z;
+		return ans;
+	}
+
 
 }

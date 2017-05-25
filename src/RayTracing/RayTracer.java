@@ -440,8 +440,9 @@ public class RayTracer {
 			I.y = Ig;
 			I.z = Ib;
 		}
+		Vector spec = new Vector(mat.getRr(),mat.getRg(),mat.getRb());
 		//System.out.println(Double.toString(I.x)+", "+ Double.toString(I.y)+ ", "+Double.toString(I.z));
-		return I.add( getReflectionColor(p,recRay,shape,n-1) );
+		return I.add( getReflectionColor(p,recRay,shape,n-1).dotByPart(spec)  );
 	}
 
 	private double[] getlightValues(Vector endPoint, Light licht, Shape OriginalShape) {
@@ -452,21 +453,24 @@ public class RayTracer {
 		double t = p0.getDistanceScalar(licht.getPosition());
 		Ray rayOfLight = new Ray(t, p0, v);
 		Vector normal = OriginalShape.getNormal(endPoint);
+		Shape hitShape = new Shape() {
+		};
 		double denominator = normal.x + normal.y*t + normal.z*t*t;
 		int flag = 0;
 		for (Shape sh : this.scene.getShapes()) {
 			double hitDistance = rayOfLight.inter(sh);
 			if (hitDistance > 0 && hitDistance < t ) {
 				flag = 1; // hit 
-				break;
+				hitShape = sh;
 			}
 		}
 			
 			if(flag > 0){	// abstraction to that certain light source 
-				
-				ans[0] = licht.getR() * (1 - licht.getShadow());
-				ans[1] = licht.getG() * (1 - licht.getShadow());
-				ans[2] = licht.getB() * (1 - licht.getShadow());
+				if(hitShape != OriginalShape) {
+					ans[0] = licht.getR() * (1 - licht.getShadow());
+					ans[1] = licht.getG() * (1 - licht.getShadow());
+					ans[2] = licht.getB() * (1 - licht.getShadow());
+				}
 
 			} else { 		// no abstractions
 				ans[0] = licht.getR();// / denominator;
