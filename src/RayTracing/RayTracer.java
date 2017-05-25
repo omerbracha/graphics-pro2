@@ -346,7 +346,7 @@ public class RayTracer {
 
 			Vector endPoint = ray.getP();
 			// I = I_e + K_a*I_al + K_d * (N dot L) * I_l + K_s * (V dot R)^n * I_l
-			//
+
 			Material mat = this.scene.materials.get(shape.getMat_idx() -1 );
 			double Ir = 0;
 			double Ig = 0;
@@ -357,9 +357,9 @@ public class RayTracer {
 				Vector v = licht.getPosition().sub(endPoint);
 				v = v.normalize();
 
-				Ir += (mat.getDr() * (shape.getNormal(endPoint).dot(v) ) * lightValues[0]); //+ (mat.getSr() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[0]); // change value of power  
-				Ig += (mat.getDg() * (shape.getNormal(endPoint).dot(v) ) * lightValues[1]); //+ (mat.getSg() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[1]); // change value of power
-				Ib += (mat.getDb() * (shape.getNormal(endPoint).dot(v) ) * lightValues[2]); //+ (mat.getSb() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), 1) * lightValues[2]); // change value of power
+				Ir += (mat.getDr() * (shape.getNormal(endPoint).dot(v) ) * lightValues[0]);// + (mat.getSr() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), mat.getPhong()) * lightValues[0]); // change value of power  
+				Ig += (mat.getDg() * (shape.getNormal(endPoint).dot(v) ) * lightValues[1]);// + (mat.getSg() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), mat.getPhong()) * lightValues[1]); // change value of power
+				Ib += (mat.getDb() * (shape.getNormal(endPoint).dot(v) ) * lightValues[2]);// + (mat.getSb() * Math.pow( shape.getR(endPoint,licht).dot(ray.getV()), mat.getPhong()) * lightValues[2]); // change value of power
 			}
 
 			// get base color by ray.
@@ -377,7 +377,6 @@ public class RayTracer {
 			}
 		}
 		
-		
 		double [] ans = {red , green, blue};
 		return ans;
 	}
@@ -386,34 +385,35 @@ public class RayTracer {
 		double[] ans = {0,0,0};
 		Vector v = licht.getPosition().sub(endPoint);
 		v = v.normalize();
-		Vector p0 = endPoint;//endPoint.add(v.mult(0.5)) ; ////////TODO/////////////set added value/////////////////////	
+		Vector p0 = endPoint.add(v.mult(0.001)) ; ////////TODO/////////////set added value/////////////////////	
 		double t = p0.getDistanceScalar(licht.getPosition());
 		Ray rayOfLight = new Ray(t, p0, v);
 		Vector normal = OriginalShape.getNormal(endPoint);
 		double denominator = normal.x + normal.y*t + normal.z*t*t;
+		int flag = 0;
 		for (Shape sh : this.scene.getShapes()) {
 			double hitDistance = rayOfLight.inter(sh);
-
-			if(hitDistance > 0 || hitDistance < t ){	// abstraction to that certain light source 
-				ans[0] += licht.getR();// / denominator;
-				ans[1] += licht.getG();// / denominator;
-				ans[2] += licht.getB();// / denominator;
+			if (hitDistance > 0 && hitDistance < t ) {
+				flag = 1; // hit 
+				break;
+			}
+		}
+			
+			if(flag > 0){	// abstraction to that certain light source 
 				
 //				ans[0] += licht.getR() * (1 - licht.getShadow());
 //				ans[1] += licht.getG() * (1 - licht.getShadow());
 //				ans[2] += licht.getB() * (1 - licht.getShadow());
 
-			} else { 									// no abstractions
-				ans[0] += licht.getR();// / denominator;
-				ans[1] += licht.getG();// / denominator;
-				ans[2] += licht.getB();// / denominator;
+			} else { 		// no abstractions
+				ans[0] = licht.getR();// / denominator;
+				ans[1] = licht.getG();// / denominator;
+				ans[2] = licht.getB();// / denominator;
 			}
-		}
 
 		for (int i = 0; i < 3; i++) {
 			if (ans[i] > 1 ) {
 				ans[i] = 1;
-				//System.out.println("overlighting in index - i");
 			}
 		}
 		return ans;
