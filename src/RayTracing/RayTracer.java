@@ -401,9 +401,9 @@ public class RayTracer {
 			
 			if(flag > 0){	// abstraction to that certain light source 
 				
-//				ans[0] += licht.getR() * (1 - licht.getShadow());
-//				ans[1] += licht.getG() * (1 - licht.getShadow());
-//				ans[2] += licht.getB() * (1 - licht.getShadow());
+				ans[0] = licht.getR() * (1 - licht.getShadow());
+				ans[1] = licht.getG() * (1 - licht.getShadow());
+				ans[2] = licht.getB() * (1 - licht.getShadow());
 
 			} else { 		// no abstractions
 				ans[0] = licht.getR();// / denominator;
