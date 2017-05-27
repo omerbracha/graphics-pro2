@@ -360,9 +360,9 @@ public class RayTracer {
 				Vector v = licht.getPosition().sub(endPoint);
 				v = v.normalize();
 
-				Ir += (mat.getDr() * (shape.getNormal(endPoint).dot(v) ) * lightValues[0]) + (mat.getSr() * Math.pow( shape.getR(endPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[0]); // change value of power  
-				Ig += (mat.getDg() * (shape.getNormal(endPoint).dot(v) ) * lightValues[1]) + (mat.getSg() * Math.pow( shape.getR(endPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[1]); // change value of power
-				Ib += (mat.getDb() * (shape.getNormal(endPoint).dot(v) ) * lightValues[2]) + (mat.getSb() * Math.pow( shape.getR(endPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[2]); // change value of power
+				Ir += ((mat.getDr() * (shape.getNormal(endPoint).dot(v) ) * lightValues[0]) + (mat.getSr() * Math.pow( shape.getR(endPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[0]))* (1-mat.getTrans()); // change value of power  
+				Ig += ((mat.getDg() * (shape.getNormal(endPoint).dot(v) ) * lightValues[1]) + (mat.getSg() * Math.pow( shape.getR(endPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[1]))* (1-mat.getTrans()); // change value of power
+				Ib += ((mat.getDb() * (shape.getNormal(endPoint).dot(v) ) * lightValues[2]) + (mat.getSb() * Math.pow( shape.getR(endPoint,licht.getPosition()).dot(ray.getV()), mat.getPhong()) * lightValues[2]))* (1-mat.getTrans()); // change value of power
 			}
 			
 			// reflection
@@ -393,7 +393,7 @@ public class RayTracer {
 	private Vector getBackgroundColor(Shape shape, Vector endPoint, Ray ray, int n) {
 		Ray newRay = new Ray(Double.POSITIVE_INFINITY,endPoint,ray.getV());
 		MySet set = this.scene.getMySet();
-		double red = 255*set.getBgr(),green = 255*set.getBgg(),blue = 255*set.getBgb();
+		double red = set.getBgr(),green = set.getBgg(),blue = set.getBgb();
 		Vector ans = new Vector(red,green,blue);
 		double t = 0;
 		int flag = 0;
@@ -418,7 +418,7 @@ public class RayTracer {
 
 				// I = I_e + K_a*I_al + K_d * (N dot L) * I_l + K_s * (V dot R)^n * I_l
 
-				Vector backColor = getBackgroundColor(shape,newEndPoint,newRay, n);
+				Vector backColor = getBackgroundColor(shape,newEndPoint,newRay, n-1);
 				double Ir = backColor.x *mat.getTrans();
 				double Ig = backColor.y *mat.getTrans();
 				double Ib = backColor.z *mat.getTrans();
