@@ -362,7 +362,6 @@ public class RayTracer {
 		MySet set = this.scene.getMySet();
 		double red = 0,green = 0,blue = 0;
 		// halting condition 
-		
 		if (rec == 0) {
 			red = set.getBgr();
 			green = set.getBgg();
@@ -370,6 +369,7 @@ public class RayTracer {
 			double [] ans_stopping = {red , green, blue};
 			return ans_stopping; 
 		}
+		
 		
 		// not ending 
 		Shape shape = new Shape() {}; 
@@ -537,11 +537,13 @@ public class RayTracer {
 	}
 
 	private double[] getlightValues(Vector endPoint, Light licht, Shape OriginalShape) {
+
+		int softShadows = 0; // TODO
 		double[] ans = {0,0,0};
 		Vector v = licht.getPosition().sub(endPoint);
 		v = v.normalize();
-		Vector p0 = endPoint.add(v.mult(0.001)) ; ////////TODO/////////////set added value/////////////////////
-		//Vector p0 = endPoint.add(OriginalShape.getNormal(endPoint).mult(0.001)) ; 	
+		//Vector p0 = endPoint.add(v.mult(0.01)) ; ////////TODO/////////////set added value/////////////////////
+		Vector p0 = endPoint.add(OriginalShape.getNormal(endPoint).mult(0.001)) ; 	
 		double t = p0.getDistanceScalar(licht.getPosition());
 		Ray rayOfLight = new Ray(t, p0, v);
 		Vector normal = OriginalShape.getNormal(endPoint);
@@ -549,19 +551,35 @@ public class RayTracer {
 		};
 		//double denominator = normal.x + normal.y*t + normal.z*t*t;
 		int flag = 0;
+		ArrayList<Shape> shapes = new ArrayList<>();
 		for (Shape sh : this.scene.getShapes()) {
 			double hitDistance = rayOfLight.inter(sh);
 			if (hitDistance > 0 && hitDistance < t ) {
 				flag = 1; // hit 
+				shapes.add(sh);
 				hitShape = sh;
 			}
 		}
 			
 			if(flag > 0){	// abstraction to that certain light source 
 				if(hitShape != OriginalShape) {
-					ans[0] = licht.getR() * (1 - licht.getShadow());
-					ans[1] = licht.getG() * (1 - licht.getShadow());
-					ans[2] = licht.getB() * (1 - licht.getShadow());
+					double shade = 0;
+					for (Shape shape : shapes) {
+						shade += (this.scene.getMaterials().get(shape.getMat_idx()-1)).getTrans();
+						//System.out.println(shade);
+					}
+					shade = shade/shapes.size();
+					shade = 1 - shade; 
+					ans[0] = licht.getR() * (1 - licht.getShadow() * shade);
+					ans[1] = licht.getG() * (1 - licht.getShadow() * shade);
+					ans[2] = licht.getB() * (1 - licht.getShadow() * shade);
+					
+					if (softShadows > 0){
+						double softShade = getSoftShadowValue(hitShape, licht, endPoint);
+						for (int i = 0; i < 3; i++) {
+							ans[i] *= softShade;
+						}
+					}
 				}
 
 			} else { 		// no abstractions
@@ -576,6 +594,28 @@ public class RayTracer {
 			}
 		}
 		return ans;
+	}
+
+private double getSoftShadowValue(Shape sh, Light licht, Vector endPoint) {
+		double shRays = (double)this.scene.getMySet().getSh_rays();
+		double cnt = 0;
+		
+		for (double i = -(licht.getWidth()/2) ; i < (licht.getWidth()/2); i+= (licht.getWidth()/shRays) ) {
+			for (double j = -(licht.getWidth()/2) ; j < (licht.getWidth()/2); j+= (licht.getWidth()/shRays) ) {
+				Vector p0 = endPoint;
+				Vector p = licht.getPosition();
+				// p.change; // TODO change into
+				Vector v = (p.sub(p0)).normalize();
+				double t = p0.getDistanceScalar(p);
+				Ray ray = new Ray(t, p0, v);
+				
+				if (ray.inter(sh) > 0) {
+					cnt+= 1;
+				}
+			}
+		}
+		double ans = cnt/(shRays*shRays);
+		return 1;
 	}
 
 //	public double[] getlightValues(RayTracer rayTracer, Vector endPoint,Shape shape) {
