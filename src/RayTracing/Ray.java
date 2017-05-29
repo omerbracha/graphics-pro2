@@ -183,8 +183,8 @@ public class Ray {
 			return -1;
 		}
 
-		double t_hc = Math.sqrt(sph.getRadius()*sph.getRadius() - d_pow); 	// never gets here. 
-		double dist = interDist(t_hc, t_ca);								// 
+		double t_hc = Math.sqrt(sph.getRadius()*sph.getRadius() - d_pow); 	//  
+		double dist = interDist(t_hc, t_ca);								//
 		return dist;														// 
 	}
 
@@ -266,20 +266,27 @@ public class Ray {
 
 		double t1 = t_ca - t_hc;
 		double t2 = t_ca + t_hc;
-
 		if( (t1 < 0) && (t2 < 0) ){ 				// behind camera 
 			return -1; 
 		}
 		if(t1 < 0){									// only 2 in
 			return t2;
 		}
-		if(t2<0){									// only 1 in 
-			return t1;
-		}
-		if(t2<t1){									// 2 is minimal 
-			return t2;
-		}
 		return t1;									// 1 is minimal 
+
+		//		if( (t1 < 0) && (t2 < 0) ){ 				// behind camera 
+		//			return -1; 
+		//		}
+		//		if(t1 < 0){									// only 2 in
+		//			return t2;
+		//		}
+		//		if(t2<0){									// only 1 in 
+		//			return t1;
+		//		}
+		//		if(t2<t1){									// 2 is minimal 
+		//			return t2;
+		//		}
+		//		return t1;									// 1 is minimal 
 	}
 
 	public double inter(Shape sh) {

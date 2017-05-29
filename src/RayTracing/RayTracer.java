@@ -391,17 +391,16 @@ public class RayTracer {
 		}
 
 		// not ending
-		Shape shape = new Shape() {
-		};
+		Shape shape = new Shape() {};
 		Ray ray = inputRay;
 		for (Shape sh : this.scene.getShapes()) {
-			if (shape != inputShape) {
+			if (sh != inputShape) {
 				if ((t = ray.inter(sh)) > 0) {
-					if (t < ray.t) {
-						ray.t = t;
-						shape = sh;
-						flag = 1; // hit
-					}
+						if (t < ray.t) {
+							ray.t = t;
+							shape = sh;
+							flag = 1; // hit
+						}
 				}
 			}
 		}
@@ -468,18 +467,24 @@ public class RayTracer {
 	private Vector getBackgroundColor(double inputRed, double inputGreen, double inputBlue, Shape shape,
 			Vector endPoint, Ray ray, int rec) {
 		Ray newRay = new Ray(Double.POSITIVE_INFINITY, endPoint, ray.getV());
+		
 		MySet set = this.scene.getMySet();
 		double red = 0, green = 0, blue = 0;
 		double t = 0;
 
 		if (rec == 0) { // finish recursion
-			red = //set.getBgr();
+			red = set.getBgr();
 			green = set.getBgg();
 			blue = set.getBgb();
 			Vector ans = new Vector(red, green, blue);
 			return (ans);
 		}
 		double[] recans = sampleColorByRayRec(newRay, t, red, green, blue, rec - 1, shape);
+//		for (int i = 0; i < 3; i++) {
+//			if(recans[i] > 1){
+//				recans[i] = 1;
+//			}
+//		}
 		Vector ans = new Vector(recans[0], recans[1], recans[2]);
 		//Vector ans = new Vector(inputRed + recans[0], inputGreen + recans[1], inputBlue + recans[2]);
 		return ans;
