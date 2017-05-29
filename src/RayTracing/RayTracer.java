@@ -92,8 +92,8 @@ public class RayTracer {
 			++lineNum;
 
 			if (line.isEmpty() || (line.charAt(0) == '#')) { // This line in the
-																// scene file is
-																// a comment
+				// scene file is
+				// a comment
 				continue;
 			} else {
 				String code = line.substring(0, 3).toLowerCase();
@@ -112,12 +112,12 @@ public class RayTracer {
 					cam.setUvY(Integer.parseInt(params[7])); // set up vector y
 					cam.setUvZ(Integer.parseInt(params[8])); // set up vector z
 					cam.setSc_dist(Double.parseDouble(params[9])); // set up
-																	// distance
-																	// from view
+					// distance
+					// from view
 					cam.setSw_from_cam(Integer.parseInt(params[10]));// set up
-																		// width
-																		// from
-																		// view
+					// width
+					// from
+					// view
 
 					scene.setCam(cam); // set camera to scene
 
@@ -126,21 +126,21 @@ public class RayTracer {
 
 					MySet set = new MySet();
 					set.setBgr(Double.parseDouble(params[0])); // R background
-																// color.
+					// color.
 					set.setBgg(Double.parseDouble(params[1])); // G background
-																// color.
+					// color.
 					set.setBgb(Double.parseDouble(params[2])); // B background
-																// color.
+					// color.
 					set.setSh_rays(Integer.parseInt(params[3])); // root number
-																	// of shadow
-																	// rays.
+					// of shadow
+					// rays.
 					set.setRec_max(Integer.parseInt(params[4])); // maximum
-																	// recursion.
+					// recursion.
 
 					if (params.length > 5) {
 						set.setSS(Integer.parseInt(params[5])); // super
-																// sampling
-																// level.
+						// sampling
+						// level.
 					} else {
 						set.setSS(2);
 					}
@@ -173,17 +173,17 @@ public class RayTracer {
 					sphere.setIndex(cnt_sph);
 					cnt_sph++;
 					sphere.setCx(Double.parseDouble(params[0])); // sphere
-																	// center x
+					// center x
 					sphere.setCy(Double.parseDouble(params[1])); // sphere
-																	// center y
+					// center y
 					sphere.setCz(Double.parseDouble(params[2])); // sphere
-																	// center z
+					// center z
 					sphere.setRadius(Double.parseDouble(params[3])); // radius
 					sphere.setMat_idx(Integer.parseInt(params[4])); // material
-																	// index
-																	// number
+					// index
+					// number
 					scene.getShapes().add(sphere); // add a sphere to the sphere
-													// list.
+					// list.
 
 					System.out.println(String.format("Parsed sphere (line %d)", lineNum));
 				} else if (code.equals("pln")) {
@@ -373,9 +373,9 @@ public class RayTracer {
 
 			// halting condition
 			if (rec == 0) {
-				red = mat.getDr();// set.getBgr();
+				red = mat.getDr();	// set.getBgr();
 				green = mat.getDg();// set.getBgg();
-				blue = mat.getDb();// set.getBgb();
+				blue = mat.getDb();	// set.getBgb();
 				double[] ans_stopping = { red, green, blue };
 				return ans_stopping;
 			}
@@ -396,11 +396,11 @@ public class RayTracer {
 		for (Shape sh : this.scene.getShapes()) {
 			if (sh != inputShape) {
 				if ((t = ray.inter(sh)) > 0) {
-						if (t < ray.t) {
-							ray.t = t;
-							shape = sh;
-							flag = 1; // hit
-						}
+					if (t < ray.t) {
+						ray.t = t;
+						shape = sh;
+						flag = 1; // hit
+					}
 				}
 			}
 		}
@@ -424,18 +424,28 @@ public class RayTracer {
 				Ir += ((mat.getDr() * (shape.getNormal(endPoint).dot(v)) * lightValues[0]) + (mat.getSr()
 						* Math.pow(shape.getR(endPoint, licht.getPosition()).dot(ray.getV()), mat.getPhong())
 						* lightValues[0])) * (1 - mat.getTrans()); // change
-																	// value of
-																	// power
+				// value of
+				// power
 				Ig += ((mat.getDg() * (shape.getNormal(endPoint).dot(v)) * lightValues[1]) + (mat.getSg()
 						* Math.pow(shape.getR(endPoint, licht.getPosition()).dot(ray.getV()), mat.getPhong())
 						* lightValues[1])) * (1 - mat.getTrans()); // change
-																	// value of
-																	// power
+				// value of
+				// power
 				Ib += ((mat.getDb() * (shape.getNormal(endPoint).dot(v)) * lightValues[2]) + (mat.getSb()
 						* Math.pow(shape.getR(endPoint, licht.getPosition()).dot(ray.getV()), mat.getPhong())
 						* lightValues[2])) * (1 - mat.getTrans()); // change
-																	// value of
-																	// power
+				// value of
+				// power
+//				if(Ir < 0){
+//					Ir = (-1)*Ir;
+//				}
+//				if(Ig < 0){
+//					Ig = (-1)*Ig;
+//				}
+//				if(Ib < 0){
+//					Ib = (-1)*Ib;
+//				}
+
 			}
 
 			// reflection
@@ -446,11 +456,11 @@ public class RayTracer {
 
 			// get base color by ray.
 			red = Ir; // this.scene.materials.get(shape.getMat_idx() -1
-						// ).getDr() * 255 * lightValues[0];
+			// ).getDr() * 255 * lightValues[0];
 			green = Ig; // this.scene.materials.get(shape.getMat_idx() -1
-						// ).getDg() * 255 * lightValues[1];
+			// ).getDg() * 255 * lightValues[1];
 			blue = Ib; // this.scene.materials.get(shape.getMat_idx() -1
-						// ).getDb() * 255 * lightValues[2];
+			// ).getDb() * 255 * lightValues[2];
 		} else {
 			// hit nothing
 			red = set.getBgr();
@@ -460,6 +470,17 @@ public class RayTracer {
 			return ans_stopping;
 
 		}
+
+		if (red < 0){
+			red = 0;
+		}
+		if (green < 0){
+			green = 0;
+		}
+		if (blue < 0){
+			blue = 0;
+		}
+
 		double[] ans = { red, green, blue };
 		return ans;
 	}
@@ -467,7 +488,7 @@ public class RayTracer {
 	private Vector getBackgroundColor(double inputRed, double inputGreen, double inputBlue, Shape shape,
 			Vector endPoint, Ray ray, int rec) {
 		Ray newRay = new Ray(Double.POSITIVE_INFINITY, endPoint, ray.getV());
-		
+
 		MySet set = this.scene.getMySet();
 		double red = 0, green = 0, blue = 0;
 		double t = 0;
@@ -480,11 +501,11 @@ public class RayTracer {
 			return (ans);
 		}
 		double[] recans = sampleColorByRayRec(newRay, t, red, green, blue, rec - 1, shape);
-//		for (int i = 0; i < 3; i++) {
-//			if(recans[i] > 1){
-//				recans[i] = 1;
-//			}
-//		}
+		//		for (int i = 0; i < 3; i++) {
+		//			if(recans[i] > 1){
+		//				recans[i] = 1;
+		//			}
+		//		}
 		Vector ans = new Vector(recans[0], recans[1], recans[2]);
 		//Vector ans = new Vector(inputRed + recans[0], inputGreen + recans[1], inputBlue + recans[2]);
 		return ans;
@@ -566,7 +587,7 @@ public class RayTracer {
 
 	private double[] getlightValues(Vector endPoint, Light licht, Shape OriginalShape) {
 
-		int softShadows = 0; // TODO
+		int softShadows = 1; // TODO
 		double[] ans = { 0, 0, 0 };
 		Vector v = licht.getPosition().sub(endPoint);
 		v = v.normalize();
@@ -604,9 +625,9 @@ public class RayTracer {
 				ans[2] = licht.getB() * (1 - licht.getShadow() * shade);
 
 				if (softShadows > 0) {
-					double softShade = getSoftShadowValue(hitShape, licht, endPoint);
+					double softShade = getSoftShadowValue(hitShape, licht,rayOfLight, endPoint);
 					for (int i = 0; i < 3; i++) {
-						ans[i] *= softShade;
+						ans[i] *= (softShade);
 					}
 				}
 			}
@@ -625,26 +646,33 @@ public class RayTracer {
 		return ans;
 	}
 
-	private double getSoftShadowValue(Shape sh, Light licht, Vector endPoint) {
+	private double getSoftShadowValue(Shape sh, Light licht, Ray rayOfLight, Vector endPoint) {
 		double shRays = (double) this.scene.getMySet().getSh_rays();
 		double cnt = 0;
-
-		for (double i = -(licht.getWidth() / 2); i < (licht.getWidth() / 2); i += (licht.getWidth() / shRays)) {
-			for (double j = -(licht.getWidth() / 2); j < (licht.getWidth() / 2); j += (licht.getWidth() / shRays)) {
+		
+		Vector prepUP = rayOfLight.getV().perpendicular();
+		Vector prepDown = prepUP.mult(-1);
+		Vector prepLeft = prepUP.cross(rayOfLight.getV().mult(-1));
+		Vector prepRight = prepLeft.mult(-1);
+		
+		Vector p1 = (licht.getPosition()).add(prepLeft.mult(licht.getWidth()/2));
+		Vector startPoint = p1.add(prepUP.mult(licht.getWidth()/2));
+		double cellSize = licht.getWidth() / shRays;
+		
+		for (int i = 0; i < shRays; i++){
+			for (int j = 0; j < shRays; j++){
 				Vector p0 = endPoint;
-				Vector p = licht.getPosition();
-				// p.change; // TODO change into
+				Vector p = ( startPoint.add(prepDown.mult(cellSize * i)) ).add(prepRight.mult(cellSize * j)) ; 
 				Vector v = (p.sub(p0)).normalize();
 				double t = p0.getDistanceScalar(p);
 				Ray ray = new Ray(t, p0, v);
-
 				if (ray.inter(sh) > 0) {
 					cnt += 1;
 				}
 			}
 		}
 		double ans = cnt / (shRays * shRays);
-		return 1;
+		return ans; // TODO return ans aaa
 	}
 
 	// public double[] getlightValues(RayTracer rayTracer, Vector endPoint,Shape

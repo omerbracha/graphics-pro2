@@ -90,5 +90,13 @@ public class Vector {
 		return ans;
 	}
 
+	public Vector perpendicular() {
+		double x = this.y - this.z;
+		double y = this.x;
+		double z = -this.x;
+		Vector ans = new Vector(x,y,z);
+		return ans;
+	}
+
 
 }
