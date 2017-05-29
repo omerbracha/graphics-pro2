@@ -47,7 +47,14 @@ public class Ray {
 	public void cameraRay(RayTracer tracer, int TopBottom, int leftRight, int i, int j) {
 		// p0 = position 
 		// t = inf
-
+		
+		// yuval : 
+		// up vector = given up
+		// right vector = up cross look at. 
+		// top left = cam.pos add - (width/2) * up add (width/2) * left
+		// add cell size ad return vector.
+		
+		
 		int n = tracer.scene.mySet.getSS(); // super sampling number
 		Camera cam = tracer.scene.cam;
 
