@@ -436,15 +436,15 @@ public class RayTracer {
 						* lightValues[2])) * (1 - mat.getTrans()); // change
 				// value of
 				// power
-//				if(Ir < 0){
-//					Ir = (-1)*Ir;
-//				}
-//				if(Ig < 0){
-//					Ig = (-1)*Ig;
-//				}
-//				if(Ib < 0){
-//					Ib = (-1)*Ib;
-//				}
+				//				if(Ir < 0){
+				//					Ir = (-1)*Ir;
+				//				}
+				//				if(Ig < 0){
+				//					Ig = (-1)*Ig;
+				//				}
+				//				if(Ib < 0){
+				//					Ib = (-1)*Ib;
+				//				}
 
 			}
 
@@ -623,42 +623,41 @@ public class RayTracer {
 				ans[0] = licht.getR() * (1 - licht.getShadow() * shade);
 				ans[1] = licht.getG() * (1 - licht.getShadow() * shade);
 				ans[2] = licht.getB() * (1 - licht.getShadow() * shade);
-
-				if (softShadows > 0) {
-					double softShade = getSoftShadowValue(hitShape, licht,rayOfLight, endPoint);
-					for (int i = 0; i < 3; i++) {
-						ans[i] *= (softShade);
-					}
-				}
 			}
-
 		} else { // no abstractions
 			ans[0] = licht.getR();// / denominator;
 			ans[1] = licht.getG();// / denominator;
 			ans[2] = licht.getB();// / denominator;
 		}
 
+		if (softShadows > 0) {
+			double softShade = getSoftShadowValue(shapes, licht,rayOfLight, endPoint);
+			for (int i = 0; i < 3; i++) {
+				ans[i] *= (softShade);
+			}
+		}
+
 		for (int i = 0; i < 3; i++) {
 			if (ans[i] > 1) {
-				ans[i] = 1;
+				//			ans[i] = 1;
 			}
 		}
 		return ans;
 	}
 
-	private double getSoftShadowValue(Shape sh, Light licht, Ray rayOfLight, Vector endPoint) {
+	private double getSoftShadowValue(ArrayList<Shape> shapes, Light licht, Ray rayOfLight, Vector endPoint) {
 		double shRays = (double) this.scene.getMySet().getSh_rays();
 		double cnt = 0;
-		
-		Vector prepUP = rayOfLight.getV().perpendicular();
+
+		Vector prepUP = rayOfLight.getV().perpendicular().normalize();
 		Vector prepDown = prepUP.mult(-1);
-		Vector prepLeft = prepUP.cross(rayOfLight.getV().mult(-1));
+		Vector prepLeft = prepUP.cross(rayOfLight.getV().mult(-1)).normalize();
 		Vector prepRight = prepLeft.mult(-1);
-		
+
 		Vector p1 = (licht.getPosition()).add(prepLeft.mult(licht.getWidth()/2));
 		Vector startPoint = p1.add(prepUP.mult(licht.getWidth()/2));
 		double cellSize = licht.getWidth() / shRays;
-		
+
 		for (int i = 0; i < shRays; i++){
 			for (int j = 0; j < shRays; j++){
 				Vector p0 = endPoint;
@@ -666,8 +665,11 @@ public class RayTracer {
 				Vector v = (p.sub(p0)).normalize();
 				double t = p0.getDistanceScalar(p);
 				Ray ray = new Ray(t, p0, v);
-				if (ray.inter(sh) > 0) {
-					cnt += 1;
+				for(Shape sh : shapes){
+					if (ray.inter(sh) > 0) {
+						cnt += 1; // TODO brake ?
+						//break;
+					}
 				}
 			}
 		}

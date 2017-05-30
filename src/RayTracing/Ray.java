@@ -47,22 +47,80 @@ public class Ray {
 	public void cameraRay(RayTracer tracer, int TopBottom, int leftRight, int i, int j) {
 		// p0 = position 
 		// t = inf
-		
+
 		// yuval : 
 		// up vector = given up
 		// right vector = up cross look at. 
 		// top left = cam.pos add - (width/2) * up add (width/2) * left
 		// add cell size ad return vector.
-		
-		
+
+
 		int n = tracer.scene.mySet.getSS(); // super sampling number
 		Camera cam = tracer.scene.cam;
 
+		///// yuval ////
 		double t = Double.POSITIVE_INFINITY;
-		Vector p0 = cam.getPosition();
+		Vector newP0 = cam.getPosition(); 
 		double sw = cam.getSw_from_cam();
 		double sd = cam.getSc_dist();
 		double sh = (sw/tracer.imageWidth) * tracer.imageHeight;
+		Vector lookAt = (cam.getLookat().sub(newP0)).normalize();
+		Vector upVector = (cam.getUp()).mult(-1);
+		Vector rightVector = lookAt.cross(upVector).normalize();
+		Vector downVector = upVector.mult(-1);
+		Vector leftVector = rightVector.mult(-1);
+		Vector topLeftPoint = ((newP0.add(leftVector.mult(sw/2))).add(upVector.mult(sh/2)));
+		double pixelWidth =  sw / tracer.imageWidth;
+		double pixelHight = pixelWidth;// sh / tracer.imageHeight;
+		double cellWidth = pixelWidth / n;
+		double cellHight = cellWidth;// pixelHight / n;
+		topLeftPoint = topLeftPoint.add(rightVector.mult(cellWidth/2)).add(downVector.mult(cellHight/2));
+
+		// create ray:
+		Vector newP = topLeftPoint.add(rightVector.mult( (pixelWidth) * (leftRight + (j/n)) ));
+		newP = newP.add(downVector.mult( (pixelHight) * (TopBottom + (i/n)) ));
+		newP = newP.add(lookAt.mult(sd));
+		Vector V = newP.sub(newP0);
+		V = V.normalize();
+		this.p0 = newP0;
+		this.t = t;
+		this.v = V;
+
+
+
+		///////////////////with semi lookat//////////////////
+		//
+		//		lookAt.x = lookAt.x - p0.x;
+		//		lookAt.y = lookAt.y - p0.y;
+		//		lookAt.z = lookAt.z - p0.z;
+		//		double lookX = lookAt.x*sd;
+		//		double lookY = lookAt.y*sd;
+		//		double lookZ = lookAt.z;
+		//
+		//		double Px = lookX + cam.getpX() - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
+		//		double Py = lookY + cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
+		//		double Pz = lookZ;
+		//		double Vx = Px - p0.x;
+		//		double Vy = Py - p0.y;
+		//		double Vz = Pz;
+		//
+		//		double size = Math.sqrt(Vx*Vx + Vy*Vy + Vz*Vz);
+		//		Vector V = new Vector(Vx/size, Vy/size, Vz/size);
+
+
+		/*/////////without lookat///////////////////
+
+		double Px = cam.getpX() - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
+		double Py = cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
+		double Pz = cam.getSc_dist();
+		double Vx = Px - p0.x;
+		double Vy = Py - p0.y;
+		double Vz = Pz;
+		 */
+		//Vector V = new Vector(Vx, Vy, Vz);
+		//V = V.normalize();
+		//double[][] inv1 = inverse.getArray();
+		//V = vecTimesMat(V, inv1);
 
 		//		
 		//		Vector lookat = cam.getLookat().sub(p0);
@@ -115,45 +173,6 @@ public class Ray {
 
 
 
-		///////////////////with semi lookat//////////////////
-
-		Vector lookAt = cam.getLookat();
-		lookAt.x = lookAt.x - p0.x;
-		lookAt.y = lookAt.y - p0.y;
-		lookAt.z = lookAt.z - p0.z;
-		lookAt = lookAt.normalize();
-		double lookX = lookAt.x*sd;
-		double lookY = lookAt.y*sd;
-		double lookZ = lookAt.z;
-
-		double Px = lookX + cam.getpX() - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
-		double Py = lookY + cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
-		double Pz = lookZ;
-		double Vx = Px - p0.x;
-		double Vy = Py - p0.y;
-		double Vz = Pz;
-
-
-		/*/////////without lookat///////////////////
-
-		double Px = cam.getpX() - (sw/2) + ( (sw/tracer.imageWidth) * (leftRight + (j/n)) );
-		double Py = cam.getpY() - (sh/2) + ( (sh/tracer.imageHeight) * (TopBottom + (i/n)) );
-		double Pz = cam.getSc_dist();
-		double Vx = Px - p0.x;
-		double Vy = Py - p0.y;
-		double Vz = Pz;
-		 */
-		//Vector V = new Vector(Vx, Vy, Vz);
-		//V = V.normalize();
-		//double[][] inv1 = inverse.getArray();
-		//V = vecTimesMat(V, inv1);
-
-		double size = Math.sqrt(Vx*Vx + Vy*Vy + Vz*Vz);
-		Vector V = new Vector(Vx/size, Vy/size, Vz/size);
-
-		this.p0 = p0;
-		this.t = t;
-		this.v = V;
 	}
 
 	private Vector vecTimesMat(Vector v1, double[][] m) {

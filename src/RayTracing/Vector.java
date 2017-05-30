@@ -91,10 +91,13 @@ public class Vector {
 	}
 
 	public Vector perpendicular() {
-		double x = this.y - this.z;
-		double y = this.x;
-		double z = -this.x;
-		Vector ans = new Vector(x,y,z);
+		//double x = this.y - this.z;
+		//double y = this.x;
+		//double z = -this.x;
+		//Vector ans = new Vector(x,y,z);
+		//return ans;
+		Vector ans = new Vector(0,0,1);
+		ans.cross(this);
 		return ans;
 	}
 
