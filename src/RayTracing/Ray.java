@@ -74,7 +74,7 @@ public class Ray {
 		double pixelHight = pixelWidth;// sh / tracer.imageHeight;
 		double cellWidth = pixelWidth / n;
 		double cellHight = cellWidth;// pixelHight / n;
-		topLeftPoint = topLeftPoint.add(rightVector.mult(cellWidth/2)).add(downVector.mult(cellHight/2));
+		//topLeftPoint = topLeftPoint.add(rightVector.mult(cellWidth/2)).add(downVector.mult(cellHight/2));
 
 		// create ray:
 		Vector newP = topLeftPoint.add(rightVector.mult( (pixelWidth) * (leftRight + (j/n)) ));
@@ -85,8 +85,6 @@ public class Ray {
 		this.p0 = newP0;
 		this.t = t;
 		this.v = V;
-
-
 
 		///////////////////with semi lookat//////////////////
 		//

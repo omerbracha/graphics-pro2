@@ -629,14 +629,13 @@ public class RayTracer {
 			ans[1] = licht.getG();// / denominator;
 			ans[2] = licht.getB();// / denominator;
 		}
-
+		
 		if (softShadows > 0) {
 			double softShade = getSoftShadowValue(shapes, licht,rayOfLight, endPoint);
 			for (int i = 0; i < 3; i++) {
-				ans[i] *= (softShade);
+				ans[i] *= (1 - softShade);
 			}
 		}
-
 		for (int i = 0; i < 3; i++) {
 			if (ans[i] > 1) {
 				//			ans[i] = 1;
@@ -648,7 +647,7 @@ public class RayTracer {
 	private double getSoftShadowValue(ArrayList<Shape> shapes, Light licht, Ray rayOfLight, Vector endPoint) {
 		double shRays = (double) this.scene.getMySet().getSh_rays();
 		double cnt = 0;
-
+		double sum = 0;
 		Vector prepUP = rayOfLight.getV().perpendicular().normalize();
 		Vector prepDown = prepUP.mult(-1);
 		Vector prepLeft = prepUP.cross(rayOfLight.getV().mult(-1)).normalize();
@@ -665,18 +664,58 @@ public class RayTracer {
 				Vector v = (p.sub(p0)).normalize();
 				double t = p0.getDistanceScalar(p);
 				Ray ray = new Ray(t, p0, v);
+				sum = 1;
 				for(Shape sh : shapes){
 					if (ray.inter(sh) > 0) {
-						cnt += 1; // TODO brake ?
+						Material mat = this.scene.getMaterials().get(sh.mat_idx-1);
+						cnt += (1 - mat.getTrans()) ; // TODO brake ?
+						sum += 1;
 						//break;
 					}
 				}
 			}
 		}
-		double ans = cnt / (shRays * shRays);
+		double ans = cnt / (shRays * shRays * sum);
+		return ans; // TODO return ans aaa
+	}
+	
+	private double getSoftShadowValueNormal(ArrayList<Shape> shapes, Light licht, Ray rayOfLight, Vector endPoint) {
+		double shRays = (double) this.scene.getMySet().getSh_rays();
+		double cnt = 0;
+		double sum = 0;
+		Vector prepUP = rayOfLight.getV().perpendicular().normalize();
+		Vector prepDown = prepUP.mult(-1);
+		Vector prepLeft = prepUP.cross(rayOfLight.getV().mult(-1)).normalize();
+		Vector prepRight = prepLeft.mult(-1);
+
+		Vector p1 = (rayOfLight.getP0()).add(prepLeft.mult(licht.getWidth()/2));
+		Vector startPoint = p1.add(prepUP.mult(licht.getWidth()/2));
+		double cellSize = licht.getWidth() / shRays;
+
+		for (int i = 0; i < shRays; i++){
+			for (int j = 0; j < shRays; j++){
+				Vector p0 = licht.getPosition();
+				Vector p = ( startPoint.add(prepDown.mult(cellSize * i)) ).add(prepRight.mult(cellSize * j)) ; 
+				Vector v = (p.sub(p0)).normalize();
+				double t = p0.getDistanceScalar(p);
+				Ray ray = new Ray(t, p0, v);
+				sum = 1;
+				for(Shape sh : shapes){
+					if (ray.inter(sh) > 0) {
+						Material mat = this.scene.getMaterials().get(sh.mat_idx-1);
+						cnt += (1 - mat.getTrans()) ; // TODO brake ?
+						sum += 1;
+						//break;
+					}
+				}
+			}
+		}
+		double ans = cnt / (shRays * shRays * sum);
 		return ans; // TODO return ans aaa
 	}
 
+	
+	
 	// public double[] getlightValues(RayTracer rayTracer, Vector endPoint,Shape
 	// shape) {
 	// double[] ans = {0,0,0};
