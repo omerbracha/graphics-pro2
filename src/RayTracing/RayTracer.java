@@ -664,20 +664,21 @@ public class RayTracer {
 		double size = licht.getWidth();
 		double cellSize = size / shRays; 
 		Vector upperLeftPoint = p0.add(up.mult(size/2)).add(left.mult(size/2));
-		//upperLeftPoint = upperLeftPoint.add(right.mult(cellSize/2)).add(down.mult(cellSize/2)); 
+//		upperLeftPoint = upperLeftPoint.add(right.mult(cellSize/2)).add(down.mult(cellSize/2)); 
+		
 		double cnt = 0;
-		for (int i = 0; i < shRays; i++) {
-			for (int j = 0; j < shRays; j++) {
+		for (int i = 0; i < (int) shRays; i++) {
+			for (int j = 0; j < (int) shRays; j++) {
 				Vector p = upperLeftPoint.add(down.mult(i*cellSize)).add(right.mult(j*cellSize)); 
-				Vector newV = endPoint.sub(p).normalize();
+				Vector newV = p.sub(endPoint).normalize();
 				double t = endPoint.getDistanceScalar(p); 
-				Vector newP0 = endPoint.add(newV.mult(0.01));
+				Vector newP0 = endPoint.add(newV.mult(0.00001));
 				Ray newRay = new Ray(t, newP0, newV);
 				
 				for(Shape shape: this.scene.getShapes()){
 						double newT = newRay.inter(shape);
 						if(( newT > 0) && ( newT <= t)){
-							cnt+= 1;
+							cnt+= 1 - this.scene.getMaterials().get(shape.getMat_idx() - 1).getTrans();
 							break;
 						}
 				}
