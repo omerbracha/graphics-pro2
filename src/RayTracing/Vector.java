@@ -76,9 +76,9 @@ public class Vector {
 	}
 
 	public double getDistanceScalar(Vector position) {
-		double x = this.x - position.x;
-		double y = this.y - position.y;
-		double z = this.z - position.z;
+		double x = Math.abs(this.x - position.x);
+		double y = Math.abs(this.y - position.y);
+		double z = Math.abs(this.z - position.z);
 		return Math.sqrt(x*x + y*y + z*z);
 	}
 

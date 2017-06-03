@@ -644,14 +644,60 @@ public class RayTracer {
 		return ans;
 	}
 
+	
+	
 	private double getSoftShadowValue(ArrayList<Shape> shapes, Light licht, Ray rayOfLight, Vector endPoint) {
+		double shRays = (double) this.scene.getMySet().getSh_rays();
+		
+		// find a plane perpendicular to the ray 
+		Vector p0 = licht.getPosition();
+		Vector normal = rayOfLight.getV().mult(-1); 
+		double d = -(p0.dot(normal));
+		double x = (-d)/(normal.x);
+		Vector p1 = new Vector(x, 0, 0);
+		Vector right = p1.sub(p0).normalize();
+		Vector up = right.cross(normal).normalize();
+		Vector left = right.mult(-1);
+		Vector down = up.mult(-1);
+		
+		// create upper-left point: 
+		double size = licht.getWidth();
+		double cellSize = size / shRays; 
+		Vector upperLeftPoint = p0.add(up.mult(size/2)).add(left.mult(size/2));
+		//upperLeftPoint = upperLeftPoint.add(right.mult(cellSize/2)).add(down.mult(cellSize/2)); 
+		double cnt = 0;
+		for (int i = 0; i < shRays; i++) {
+			for (int j = 0; j < shRays; j++) {
+				Vector p = upperLeftPoint.add(down.mult(i*cellSize)).add(right.mult(j*cellSize)); 
+				Vector newV = endPoint.sub(p).normalize();
+				double t = endPoint.getDistanceScalar(p); 
+				Vector newP0 = endPoint.add(newV.mult(0.01));
+				Ray newRay = new Ray(t, newP0, newV);
+				
+				for(Shape shape: this.scene.getShapes()){
+						double newT = newRay.inter(shape);
+						if(( newT > 0) && ( newT <= t)){
+							cnt+= 1;
+							break;
+						}
+				}
+			}
+		}
+		// have ray hit cnt
+		return cnt/(shRays * shRays);
+	}
+	
+	
+	
+	private double getSoftShadowValueOld(ArrayList<Shape> shapes, Light licht, Ray rayOfLight, Vector endPoint) {
 		double shRays = (double) this.scene.getMySet().getSh_rays();
 		double cnt = 0;
 		double sum = 0;
 		Vector prepUP = rayOfLight.getV().perpendicular().normalize();
-		Vector prepDown = prepUP.mult(-1);
 		Vector prepLeft = prepUP.cross(rayOfLight.getV().mult(-1)).normalize();
 		Vector prepRight = prepLeft.mult(-1);
+		prepUP = rayOfLight.getV().cross(prepRight);
+		Vector prepDown = prepUP.mult(-1);
 
 		Vector p1 = (licht.getPosition()).add(prepLeft.mult(licht.getWidth()/2));
 		Vector startPoint = p1.add(prepUP.mult(licht.getWidth()/2));
