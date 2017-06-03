@@ -67,6 +67,7 @@ public class Ray {
 		Vector lookAt = (cam.getLookat().sub(newP0)).normalize();
 		Vector upVector = (cam.getUp()).mult(-1);
 		Vector rightVector = lookAt.cross(upVector).normalize();
+		upVector = rightVector.cross(lookAt);
 		Vector downVector = upVector.mult(-1);
 		Vector leftVector = rightVector.mult(-1);
 		Vector topLeftPoint = ((newP0.add(leftVector.mult(sw/2))).add(upVector.mult(sh/2)));
