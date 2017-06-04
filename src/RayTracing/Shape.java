@@ -165,8 +165,11 @@ public abstract class Shape {
 	}
 	public Vector getR(Vector endPoint, Vector vec) { // get reflection vector
 		Vector d = endPoint.sub(vec);
-		Vector n = this.getNormal(endPoint);
-		Vector r = d.sub(n.mult(2 * d.dot(n)));
+		Vector normal = this.getNormal(endPoint);
+		if(normal.dot(d) < 0 ){
+			normal = normal.mult(-1);
+		}
+		Vector r = d.sub(normal.mult(2 * d.dot(normal)));
 		r = r.normalize();
 		return r;
 	}

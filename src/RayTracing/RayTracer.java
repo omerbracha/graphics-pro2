@@ -588,6 +588,7 @@ public class RayTracer {
 		// added value/////////////////////
 		Vector norm = OriginalShape.getNormal(endPoint);
 		if(OriginalShape.getClass() == Triangle.class) {
+			v = v.mult(-1);
 			if(norm.dot(v) < 0){
 				norm = norm.mult(-1);
 			}
@@ -680,6 +681,10 @@ public class RayTracer {
 				Ray newRay = new Ray(t, newP0, newV);
 
 				for (Shape shape : this.scene.getShapes()) {
+					if (shape.getClass() == Triangle.class) {
+					newRay.v = newRay.v.mult(-1);
+					newRay.p0 = licht.getPosition();
+					}
 					double newT = newRay.inter(shape);
 					if ((newT > 0) && (newT <= t)) {// && (shape !=
 													// originalShape)){
