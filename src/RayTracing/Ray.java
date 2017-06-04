@@ -45,36 +45,20 @@ public class Ray {
 	}
 
 	// create ray with screen parameters
-	public void cameraRay(RayTracer tracer, int TopBottom, int leftRight, int i, int j) {
-
+	public void cameraRay(RayTracer tracer, int TopBottom, int leftRight, int i, int j, Vector up, Vector right, Vector down, Vector left, Vector lookAt, Vector topLeft) {
 
 		int n = tracer.scene.mySet.getSS(); // super sampling number
 		Camera cam = tracer.scene.cam;
-
 		double t = Double.POSITIVE_INFINITY;
 		Vector newP0 = cam.getPosition(); 
 		double sw = cam.getSw_from_cam(); // screen width
-		double sd = cam.getSc_dist(); // screen distance
-		double sh = (sw/tracer.imageWidth) * tracer.imageHeight; // screen height
-		
-		//compute new coordinate system
-		Vector lookAt = (cam.getLookat().sub(newP0)).normalize(); 
-		Vector upVector = (cam.getUp());//.mult(-1);
-		Vector rightVector = lookAt.cross(upVector).normalize();
-		upVector = rightVector.cross(lookAt);
-		Vector downVector = upVector.mult(-1);
-		Vector leftVector = rightVector;
-		rightVector = rightVector.mult(-1);
-		
-		Vector topLeftPoint = ((newP0.add(leftVector.mult(sw/2))).add(upVector.mult(sh/2))); // top left corner of screen
+		double sd = cam.getSc_dist(); // screen distance	
 		double pixelWidth =  sw / tracer.imageWidth;
-		double pixelHight = pixelWidth;// sh / tracer.imageHeight;
-		double cellWidth = pixelWidth / n;
-		double cellHight = cellWidth;// pixelHight / n;
+		double pixelHeight = pixelWidth;// sh/tracer.imageHeight;
 
 		// create ray to point in pixel:
-		Vector newP = topLeftPoint.add(rightVector.mult( (pixelWidth) * (leftRight + (j/n)) ));
-		newP = newP.add(downVector.mult( (pixelHight) * (TopBottom + (i/n)) ));
+		Vector newP = topLeft.add(right.mult( (pixelWidth) * (leftRight + (j/n)) ));
+		newP = newP.add(down.mult( (pixelHeight) * (TopBottom + (i/n)) ));
 		newP = newP.add(lookAt.mult(sd));
 		Vector V = newP.sub(newP0);
 		V = V.normalize();

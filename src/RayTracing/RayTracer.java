@@ -93,9 +93,7 @@ public class RayTracer {
 			line = line.trim();
 			++lineNum;
 
-			if (line.isEmpty() || (line.charAt(0) == '#')) { // This line in the
-				// scene file is
-				// a comment
+			if (line.isEmpty() || (line.charAt(0) == '#')) { // This line in the scene file is a comment
 				continue;
 			} else {
 				String code = line.substring(0, 3).toLowerCase();
@@ -223,9 +221,6 @@ public class RayTracer {
 			}
 		}
 
-		// It is recommended that you check here that the scene is valid,
-		// for example camera settings and all necessary materials were defined.
-
 		if (scene.cam == null || scene.mySet == null) {
 			System.err.println("no camera or set in file");
 		}
@@ -295,30 +290,44 @@ public class RayTracer {
 		int red = 0, green = 0, blue = 0;
 		double[] ans = new double[3];
 		int size = scene.getMySet().getSS();
+		int recMax = this.scene.getMySet().getRec_max();
 		double[][][] superSampleMatrix = new double[size][size][3];
 		for (int i = 0; i < size; i++) { // iterate over super sampling matrix size
 			for (int j = 0; j < size; j++) {
-				superSampleMatrix[i][j] = sampleColorByRay(topBottom, leftRight, i, j,
-						this.scene.getMySet().getRec_max(), null); // find pixel color with ray
+				superSampleMatrix[i][j] = sampleColorByRay(topBottom, leftRight, i, j, recMax, null); // find pixel color with ray
 				red += superSampleMatrix[i][j][0]; // sum red
 				green += superSampleMatrix[i][j][1]; // sum green
 				blue += superSampleMatrix[i][j][2]; // sum blue
 			}
 		}
-		ans[0] = (int) (red / (size * size)); // add average color
-		ans[1] = (int) (green / (size * size)); // add average color
-		ans[2] = (int) (blue / (size * size)); // add average color
+		double sizeSqr = size*size;
+		ans[0] = (int) (red / sizeSqr); // add average color
+		ans[1] = (int) (green / sizeSqr); // add average color
+		ans[2] = (int) (blue / sizeSqr); // add average color
 
 		return ans;
 	}
 
 	private double[] sampleColorByRay(int TopBottom, int leftRight, int i, int j, int rec, Shape inputShape) {
 		double t = 0;
-		int flag = 0;
-		MySet set = this.scene.getMySet();
-		double red = 0, green = 0, blue = 0;
+		double red = 0, green = 0, blue = 0;				
+		Camera cam = this.scene.cam;
+		Vector newP0 = cam.getPosition(); 
+		double sw = cam.getSw_from_cam(); // screen width
+		double sh = (sw/this.imageWidth) * this.imageHeight; // screen height
+		
+		//compute new coordinate system
+		Vector lookAt = (cam.getLookat().sub(newP0)).normalize(); 
+		Vector up = (cam.getUp());//.mult(-1);
+		Vector right = lookAt.cross(up).normalize();
+		up = right.cross(lookAt);
+		Vector down = up.mult(-1);
+		Vector left = right;
+		right = right.mult(-1);
+		Vector topLeft = ((newP0.add(left.mult(sw/2))).add(up.mult(sh/2))); // top left corner of screen
+						
 		Ray ray = new Ray();
-		ray.cameraRay(this, TopBottom, leftRight, i, j); // create ray with pixel super sampling position
+		ray.cameraRay(this, TopBottom, leftRight, i, j, up, right, down, left, lookAt, topLeft); // create ray with pixel super sampling position
 		double ans[];
 		ans = sampleColorByRayRec(ray, t, red, green, blue, rec, null); // recursive color function
 		// multiply color coefficient by RGB range number
@@ -381,23 +390,20 @@ public class RayTracer {
 			double Ig = backColor.y * mat.getTrans();
 			double Ib = backColor.z * mat.getTrans();
 			double[] lightValues;
+			Vector normal = shape.getNormal(endPoint);
 			for (Light licht : this.scene.getLights()) { // check for each light in scene
 				lightValues = getlightValues(endPoint, licht, shape); // get light values
 				Vector v = licht.getPosition().sub(endPoint);
 				v = v.normalize();
-				Vector normal = shape.getNormal(endPoint);
 				double Dnormal = Math.abs(normal.dot(v));
-				
+				float phongPow = (float) Math.pow(shape.getR(endPoint, licht.getPosition()).dot(ray.getV()), mat.getPhong());
 				// sum values of diffusion and specular colors
-				Ir += ((mat.getDr() * ( Dnormal)* lightValues[0]) + (mat.getSr()
-						* licht.getSpec() * Math.pow(shape.getR(endPoint, licht.getPosition()).dot(ray.getV()), mat.getPhong())
-						* lightValues[0])) * (1 - mat.getTrans()); // change 
-				Ig += ((mat.getDg() * (Dnormal) * lightValues[1]) + (mat.getSg()
-						* licht.getSpec() * Math.pow(shape.getR(endPoint, licht.getPosition()).dot(ray.getV()), mat.getPhong())
-						* lightValues[1])) * (1 - mat.getTrans()); // change
-				Ib += ((mat.getDb() * (Dnormal) * lightValues[2]) + (mat.getSb()
-						* licht.getSpec() * Math.pow(shape.getR(endPoint, licht.getPosition()).dot(ray.getV()), mat.getPhong())
-						* lightValues[2])) * (1 - mat.getTrans()); // change
+				Ir += ((mat.getDr() * ( Dnormal)* lightValues[0]) + (mat.getSr() * licht.getSpec() * phongPow
+						* lightValues[0])) * (1 - mat.getTrans());
+				Ig += ((mat.getDg() * (Dnormal) * lightValues[1]) + (mat.getSg() * licht.getSpec() * phongPow 
+						* lightValues[1])) * (1 - mat.getTrans());
+				Ib += ((mat.getDb() * (Dnormal) * lightValues[2]) + (mat.getSb() * licht.getSpec() * phongPow
+						* lightValues[2])) * (1 - mat.getTrans());
 			}
 
 			// reflection colors
@@ -458,7 +464,6 @@ public class RayTracer {
 
 		Vector r = shape.getR(endPoint, ray.getP0()); // find reflection vector
 		Ray recRay = new Ray(Double.POSITIVE_INFINITY, endPoint, r); // find new ray from endpoint
-		Material mat = this.scene.materials.get(shape.getMat_idx() - 1);
 		MySet set = this.scene.getMySet();
 		double Ir = 0;
 		double Ig = 0;
