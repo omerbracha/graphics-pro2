@@ -375,14 +375,13 @@ public class RayTracer {
 
 			// halting condition
 			if (rec == 0) {
-				red = mat.getDr();	// set.getBgr();
+				red = mat.getDr(); // set.getBgr();
 				green = mat.getDg();// set.getBgg();
-				blue = mat.getDb();	// set.getBgb();
+				blue = mat.getDb(); // set.getBgb();
 				double[] ans_stopping = { red, green, blue };
 				return ans_stopping;
 			}
-		}
-		else {
+		} else {
 			if (rec == 0) {
 				red = set.getBgr();
 				green = set.getBgg();
@@ -393,7 +392,8 @@ public class RayTracer {
 		}
 
 		// not ending
-		Shape shape = new Shape() {};
+		Shape shape = new Shape() {
+		};
 		Ray ray = inputRay;
 		for (Shape sh : this.scene.getShapes()) {
 			if (sh != inputShape) {
@@ -413,7 +413,7 @@ public class RayTracer {
 
 			mat = this.scene.materials.get(shape.getMat_idx() - 1);
 			set = this.scene.getMySet();
-			Vector backColor = getBackgroundColor(red, green, blue, shape, endPoint, ray, rec - 1);
+			Vector backColor = getBackgroundColor(red, green, blue, shape, endPoint, ray, rec);
 			double Ir = backColor.x * mat.getTrans();
 			double Ig = backColor.y * mat.getTrans();
 			double Ib = backColor.z * mat.getTrans();
@@ -438,20 +438,20 @@ public class RayTracer {
 						* lightValues[2])) * (1 - mat.getTrans()); // change
 				// value of
 				// power
-				//				if(Ir < 0){
-				//					Ir = (-1)*Ir;
-				//				}
-				//				if(Ig < 0){
-				//					Ig = (-1)*Ig;
-				//				}
-				//				if(Ib < 0){
-				//					Ib = (-1)*Ib;
-				//				}
+				// if(Ir < 0){
+				// Ir = (-1)*Ir;
+				// }
+				// if(Ig < 0){
+				// Ig = (-1)*Ig;
+				// }
+				// if(Ib < 0){
+				// Ib = (-1)*Ib;
+				// }
 
 			}
 
 			// reflection
-			Vector I = getReflectionColor(endPoint, ray, shape, rec - 1);
+			Vector I = getReflectionColor(endPoint, ray, shape, rec);
 			Ir += mat.getRr() * I.x;
 			Ig += mat.getRg() * I.y;
 			Ib += mat.getRb() * I.z;
@@ -473,13 +473,13 @@ public class RayTracer {
 
 		}
 
-		if (red < 0){
+		if (red < 0) {
 			red = 0;
 		}
-		if (green < 0){
+		if (green < 0) {
 			green = 0;
 		}
-		if (blue < 0){
+		if (blue < 0) {
 			blue = 0;
 		}
 
@@ -503,13 +503,14 @@ public class RayTracer {
 			return (ans);
 		}
 		double[] recans = sampleColorByRayRec(newRay, t, red, green, blue, rec - 1, shape);
-		//		for (int i = 0; i < 3; i++) {
-		//			if(recans[i] > 1){
-		//				recans[i] = 1;
-		//			}
-		//		}
+		// for (int i = 0; i < 3; i++) {
+		// if(recans[i] > 1){
+		// recans[i] = 1;
+		// }
+		// }
 		Vector ans = new Vector(recans[0], recans[1], recans[2]);
-		//Vector ans = new Vector(inputRed + recans[0], inputGreen + recans[1], inputBlue + recans[2]);
+		// Vector ans = new Vector(inputRed + recans[0], inputGreen + recans[1],
+		// inputBlue + recans[2]);
 		return ans;
 		/*
 		 * 
@@ -591,110 +592,115 @@ public class RayTracer {
 
 		int softShadows = 1; // TODO
 		double[] ans = { 0, 0, 0 };
-		//Vector v = endPoint.sub(licht.getPosition());
+		// Vector v = endPoint.sub(licht.getPosition());
 		Vector v = licht.getPosition().sub(endPoint);
 		v = v.normalize();
 		// Vector p0 = endPoint.add(v.mult(0.01)) ; ////////TODO/////////////set
 		// added value/////////////////////
 		Vector p0 = endPoint.add(OriginalShape.getNormal(endPoint).mult(0.001));
 		double t = p0.getDistanceScalar(licht.getPosition());
-		//System.out.println(t);
+		// System.out.println(t);
 		Ray rayOfLight = new Ray(t, p0, v);
 		Vector normal = OriginalShape.getNormal(endPoint);
-		Shape hitShape = new Shape() {};
-		//double denominator = v.x + v.y*t + v.z*t*t;
-		int flag = 0;
+		Shape hitShape = new Shape() {
+		};
+		// double denominator = v.x + v.y*t + v.z*t*t;
+		// int flag = 0;
 		ArrayList<Shape> shapes = new ArrayList<>();
-		for (Shape sh : this.scene.getShapes()) {
-			double hitDistance = rayOfLight.inter(sh);
-			if (hitDistance > 0 && hitDistance < t) {
-				flag = 1; // hit
-				shapes.add(sh);
-				hitShape = sh;
-			}
-		}
+		// for (Shape sh : this.scene.getShapes()) {
+		// double hitDistance = rayOfLight.inter(sh);
+		// if (hitDistance > 0 && hitDistance < t) {
+		// flag = 1; // hit
+		// shapes.add(sh);
+		// hitShape = sh;
+		// }
+		// }
+		//
+		// if (flag > 0) { // abstraction to that certain light source
+		// if (hitShape != OriginalShape) {
+		// double shade = 1;
+		// for (Shape shape : shapes) {
+		// shade *= (this.scene.getMaterials().get(shape.getMat_idx() -
+		// 1)).getTrans();
+		// // System.out.println(shade);
+		// }
+		// //shade = shade / shapes.size();
+		// if (shade > 1) shade = 1;
+		// shade = 1 - shade;
+		// ans[0] = licht.getR() * (1 - licht.getShadow() * shade);
+		// ans[1] = licht.getG() * (1 - licht.getShadow() * shade);
+		// ans[2] = licht.getB() * (1 - licht.getShadow() * shade);
+		// }
+		// } else { // no abstractions
+		// }
+		ans[0] = licht.getR();// / denominator;
+		ans[1] = licht.getG();// / denominator;
+		ans[2] = licht.getB();// / denominator;
 
-		if (flag > 0) { // abstraction to that certain light source
-			if (hitShape != OriginalShape) {
-				double shade = 0;
-				for (Shape shape : shapes) {
-					shade += (this.scene.getMaterials().get(shape.getMat_idx() - 1)).getTrans();
-					// System.out.println(shade);
-				}
-				shade = shade / shapes.size();
-				shade = 1 - shade;
-				ans[0] = licht.getR() * (1 - licht.getShadow() * shade);
-				ans[1] = licht.getG() * (1 - licht.getShadow() * shade);
-				ans[2] = licht.getB() * (1 - licht.getShadow() * shade);
-			}
-		} else { // no abstractions
-			ans[0] = licht.getR() ;// / denominator;
-			ans[1] = licht.getG() ;// / denominator;
-			ans[2] = licht.getB() ;// / denominator;
-		}
-		
 		if (softShadows > 0) {
-			double softShade = getSoftShadowValue(shapes, licht,rayOfLight, endPoint);
+			double softShade = getSoftShadowValue(OriginalShape, licht, rayOfLight, endPoint);
 			for (int i = 0; i < 3; i++) {
 				ans[i] *= (1 - softShade);
 			}
 		}
 		for (int i = 0; i < 3; i++) {
 			if (ans[i] > 1) {
-				//			ans[i] = 1;
+				ans[i] = 1;
 			}
 		}
 		return ans;
 	}
 
-	
-	
-	private double getSoftShadowValue(ArrayList<Shape> shapes, Light licht, Ray rayOfLight, Vector endPoint) {
+	private double getSoftShadowValue(Shape originalShape, Light licht, Ray rayOfLight, Vector endPoint) {
 		double shRays = (double) this.scene.getMySet().getSh_rays();
-		
+
 		// find a plane perpendicular to the ray
 		double shadowValue = licht.getShadow();
 		Vector p0 = licht.getPosition();
-		Vector normal = rayOfLight.getV().mult(-1); 
+		Vector normal = rayOfLight.getV().mult(-1);
 		double d = -(p0.dot(normal));
-		double x = (-d)/(normal.x);
+		double x = (-d) / (normal.x);
 		Vector p1 = new Vector(x, 0, 0);
 		Vector right = p1.sub(p0).normalize();
 		Vector up = right.cross(normal).normalize();
 		Vector left = right.mult(-1);
 		Vector down = up.mult(-1);
-		
-		// create upper-left point: 
+
+		// create upper-left point:
 		double size = licht.getWidth();
-		double cellSize = size / shRays; 
-		Vector upperLeftPoint = p0.add(up.mult(size/2)).add(left.mult(size/2));
-//		upperLeftPoint = upperLeftPoint.add(right.mult(cellSize/2)).add(down.mult(cellSize/2)); 
-		
+		double cellSize = size / shRays;
+		Vector upperLeftPoint = p0.add(up.mult(size / 2)).add(left.mult(size / 2));
+		// upperLeftPoint =
+		// upperLeftPoint.add(right.mult(cellSize/2)).add(down.mult(cellSize/2));
+
 		double cnt = 0;
 		Random r = new Random();
 		for (int i = 0; i < (int) shRays; i++) {
 			for (int j = 0; j < (int) shRays; j++) {
-				Vector p = upperLeftPoint.add(down.mult((i+r.nextDouble())*cellSize)).add(right.mult((j + r.nextDouble())*cellSize)); 
+				Vector p = upperLeftPoint.add(down.mult((i + r.nextDouble()) * cellSize))
+						.add(right.mult((j + r.nextDouble()) * cellSize));
 				Vector newV = p.sub(endPoint).normalize();
-				double t = endPoint.getDistanceScalar(p); 
-				Vector newP0 = endPoint.add(newV.mult(0.00001));
+				double t = endPoint.getDistanceScalar(p);
+				Vector newP0 = endPoint.add(newV.mult(0.0001));
 				Ray newRay = new Ray(t, newP0, newV);
-				
-				for(Shape shape: this.scene.getShapes()){
-						double newT = newRay.inter(shape);
-						if(( newT > 0) && ( newT <= t)){
-							cnt+= (shadowValue) * (1 - this.scene.getMaterials().get(shape.getMat_idx() - 1).getTrans());
-						//	break;
+
+				for (Shape shape : this.scene.getShapes()) {
+					double newT = newRay.inter(shape);
+					if ((newT > 0) && (newT <= t)) {// && (shape !=
+													// originalShape)){
+						double trans = this.scene.getMaterials().get(shape.getMat_idx() - 1).getTrans();
+						cnt += (shadowValue) * (1 - trans);
+						if (trans == 0) {
+							break;
 						}
+					}
 				}
 			}
 		}
 		// have ray hit cnt
-		return cnt/(shRays * shRays);
+		return cnt / (shRays * shRays);
 	}
-	
-	
-	
+
 	private double getSoftShadowValueOld(ArrayList<Shape> shapes, Light licht, Ray rayOfLight, Vector endPoint) {
 		double shRays = (double) this.scene.getMySet().getSh_rays();
 		double cnt = 0;
@@ -705,24 +711,24 @@ public class RayTracer {
 		prepUP = rayOfLight.getV().cross(prepRight);
 		Vector prepDown = prepUP.mult(-1);
 
-		Vector p1 = (licht.getPosition()).add(prepLeft.mult(licht.getWidth()/2));
-		Vector startPoint = p1.add(prepUP.mult(licht.getWidth()/2));
+		Vector p1 = (licht.getPosition()).add(prepLeft.mult(licht.getWidth() / 2));
+		Vector startPoint = p1.add(prepUP.mult(licht.getWidth() / 2));
 		double cellSize = licht.getWidth() / shRays;
 
-		for (int i = 0; i < shRays; i++){
-			for (int j = 0; j < shRays; j++){
+		for (int i = 0; i < shRays; i++) {
+			for (int j = 0; j < shRays; j++) {
 				Vector p0 = endPoint;
-				Vector p = ( startPoint.add(prepDown.mult(cellSize * i)) ).add(prepRight.mult(cellSize * j)) ; 
+				Vector p = (startPoint.add(prepDown.mult(cellSize * i))).add(prepRight.mult(cellSize * j));
 				Vector v = (p.sub(p0)).normalize();
 				double t = p0.getDistanceScalar(p);
 				Ray ray = new Ray(t, p0, v);
 				sum = 1;
-				for(Shape sh : shapes){
+				for (Shape sh : shapes) {
 					if (ray.inter(sh) > 0) {
-						Material mat = this.scene.getMaterials().get(sh.mat_idx-1);
-						cnt += (1 - mat.getTrans()) ; // TODO brake ?
+						Material mat = this.scene.getMaterials().get(sh.mat_idx - 1);
+						cnt += (1 - mat.getTrans()); // TODO brake ?
 						sum += 1;
-						//break;
+						// break;
 					}
 				}
 			}
@@ -730,7 +736,7 @@ public class RayTracer {
 		double ans = cnt / (shRays * shRays * sum);
 		return ans; // TODO return ans aaa
 	}
-	
+
 	private double getSoftShadowValueNormal(ArrayList<Shape> shapes, Light licht, Ray rayOfLight, Vector endPoint) {
 		double shRays = (double) this.scene.getMySet().getSh_rays();
 		double cnt = 0;
@@ -740,24 +746,24 @@ public class RayTracer {
 		Vector prepLeft = prepUP.cross(rayOfLight.getV().mult(-1)).normalize();
 		Vector prepRight = prepLeft.mult(-1);
 
-		Vector p1 = (rayOfLight.getP0()).add(prepLeft.mult(licht.getWidth()/2));
-		Vector startPoint = p1.add(prepUP.mult(licht.getWidth()/2));
+		Vector p1 = (rayOfLight.getP0()).add(prepLeft.mult(licht.getWidth() / 2));
+		Vector startPoint = p1.add(prepUP.mult(licht.getWidth() / 2));
 		double cellSize = licht.getWidth() / shRays;
 
-		for (int i = 0; i < shRays; i++){
-			for (int j = 0; j < shRays; j++){
+		for (int i = 0; i < shRays; i++) {
+			for (int j = 0; j < shRays; j++) {
 				Vector p0 = licht.getPosition();
-				Vector p = ( startPoint.add(prepDown.mult(cellSize * i)) ).add(prepRight.mult(cellSize * j)) ; 
+				Vector p = (startPoint.add(prepDown.mult(cellSize * i))).add(prepRight.mult(cellSize * j));
 				Vector v = (p.sub(p0)).normalize();
 				double t = p0.getDistanceScalar(p);
 				Ray ray = new Ray(t, p0, v);
 				sum = 1;
-				for(Shape sh : shapes){
+				for (Shape sh : shapes) {
 					if (ray.inter(sh) > 0) {
-						Material mat = this.scene.getMaterials().get(sh.mat_idx-1);
-						cnt += (1 - mat.getTrans()) ; // TODO brake ?
+						Material mat = this.scene.getMaterials().get(sh.mat_idx - 1);
+						cnt += (1 - mat.getTrans()); // TODO brake ?
 						sum += 1;
-						//break;
+						// break;
 					}
 				}
 			}
@@ -766,8 +772,6 @@ public class RayTracer {
 		return ans; // TODO return ans aaa
 	}
 
-	
-	
 	// public double[] getlightValues(RayTracer rayTracer, Vector endPoint,Shape
 	// shape) {
 	// double[] ans = {0,0,0};
