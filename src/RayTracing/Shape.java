@@ -155,12 +155,7 @@ public abstract class Shape {
 		}
 		if (this.getClass() == Triangle.class) {
 			Triangle trn = (Triangle) this;
-			Vector normal = trn.getNormal(v);
-			if(v.dot(normal) < 0){
-				 	normal = normal.mult(-1);
-			}
-			return normal;
-			
+			return trn.getNormal(v);
 		}
 		if (this.getClass() == Plane.class) {
 			Plane pln = (Plane) this;

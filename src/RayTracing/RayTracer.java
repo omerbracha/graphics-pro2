@@ -409,18 +409,20 @@ public class RayTracer {
 				lightValues = getlightValues(endPoint, licht, shape);
 				Vector v = licht.getPosition().sub(endPoint);
 				v = v.normalize();
-
-				Ir += ((mat.getDr() * (shape.getNormal(endPoint).dot(v)) * lightValues[0]) + (mat.getSr()
+				Vector normal = shape.getNormal(endPoint);
+				double Dnormal = Math.abs(normal.dot(v));
+				
+				Ir += ((mat.getDr() * ( Dnormal)* lightValues[0]) + (mat.getSr()
 						* licht.getSpec() * Math.pow(shape.getR(endPoint, licht.getPosition()).dot(ray.getV()), mat.getPhong())
 						* lightValues[0])) * (1 - mat.getTrans()); // change 
 				// value of
 				// power
-				Ig += ((mat.getDg() * (shape.getNormal(endPoint).dot(v)) * lightValues[1]) + (mat.getSg()
+				Ig += ((mat.getDg() * (Dnormal) * lightValues[1]) + (mat.getSg()
 						* licht.getSpec() * Math.pow(shape.getR(endPoint, licht.getPosition()).dot(ray.getV()), mat.getPhong())
 						* lightValues[1])) * (1 - mat.getTrans()); // change
 				// value of
 				// power
-				Ib += ((mat.getDb() * (shape.getNormal(endPoint).dot(v)) * lightValues[2]) + (mat.getSb()
+				Ib += ((mat.getDb() * (Dnormal) * lightValues[2]) + (mat.getSb()
 						* licht.getSpec() * Math.pow(shape.getR(endPoint, licht.getPosition()).dot(ray.getV()), mat.getPhong())
 						* lightValues[2])) * (1 - mat.getTrans()); // change
 				// value of
