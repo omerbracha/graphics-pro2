@@ -364,7 +364,7 @@ public class RayTracer {
 
 	private double[] sampleColorByRayRec(Ray inputRay, double t, double InRed, double InGreen, double InBlue, int rec,
 			Shape inputShape) {
-		int flag = 0;
+		int flag = 0; // h
 		MySet set = this.scene.getMySet();
 		double red = 0, green = 0, blue = 0;
 		Material mat = new Material();
