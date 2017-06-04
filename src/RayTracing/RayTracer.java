@@ -259,7 +259,7 @@ public class RayTracer {
 		long startTime = System.currentTimeMillis();
 
 		// Create a byte array to hold the pixel data:
-		byte[] rgbData = new byte[this.imageWidth * this.imageHeight * 3];
+		byte[] rgbData = new byte[this.imageWidth * this.imageHeight * 3 ];
 
 		// Put your ray tracing code here!
 		//
@@ -272,11 +272,11 @@ public class RayTracer {
 		// Each of the red, green and blue components should be a byte, i.e.
 		// 0-255
 
-		for (int i = 0; i < imageWidth; i++) { // run from top to bottom
-			for (int j = 0; j < imageHeight; j++) { // run from left to right
+		for (int i = 0; i < this.imageWidth; i++) { // run from top to bottom
+			for (int j = 0; j < this.imageHeight; j++) { // run from left to right
 				// System.out.println(Integer.toString(i) + " " +
 				// Integer.toString(j));
-				this.screen[i][j] = getColorForPix(i, j);
+				this.screen[i][j] = getColorForPix(j, i);
 			}
 		}
 
@@ -284,10 +284,11 @@ public class RayTracer {
 		int height = this.imageHeight;
 
 		int p = 0;
-		for (int i = weight - 1; i >= 0; i--) {
+		for (int i = 0; i < weight; i++) {
 			for (int j = 0; j < height; j++) {
 				for (int k = 0; k < 3; k++) {
-					rgbData[p] = (byte) this.screen[i][j][k];
+					rgbData[(j * imageWidth + i) * 3 + k] = (byte) this.screen[i][j][k];
+					//rgbData[p] 
 					p++;
 				}
 			}

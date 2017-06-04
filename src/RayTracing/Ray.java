@@ -65,11 +65,12 @@ public class Ray {
 		double sd = cam.getSc_dist();
 		double sh = (sw/tracer.imageWidth) * tracer.imageHeight;
 		Vector lookAt = (cam.getLookat().sub(newP0)).normalize();
-		Vector upVector = (cam.getUp()).mult(-1);
+		Vector upVector = (cam.getUp());//.mult(-1);
 		Vector rightVector = lookAt.cross(upVector).normalize();
 		upVector = rightVector.cross(lookAt);
 		Vector downVector = upVector.mult(-1);
-		Vector leftVector = rightVector.mult(-1);
+		Vector leftVector = rightVector;
+		rightVector = rightVector.mult(-1);
 		Vector topLeftPoint = ((newP0.add(leftVector.mult(sw/2))).add(upVector.mult(sh/2)));
 		double pixelWidth =  sw / tracer.imageWidth;
 		double pixelHight = pixelWidth;// sh / tracer.imageHeight;
