@@ -113,8 +113,12 @@ public class Ray {
 
 	public double inter(Triangle trng) { // intersection with triangle
 		Vector norm = trng.getNormal(null); // triangle normal
+		if(norm.dot(this.getV()) < 0){
+			norm = norm.mult(-1);
+		}
+		
 		Plane plane = trngToPlane(trng, norm); // triangle plane
-
+		
 		double t = inter(plane); // intersection with plane
 		if (t < 0) { // behind camera
 			return -1;

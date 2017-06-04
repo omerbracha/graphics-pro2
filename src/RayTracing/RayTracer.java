@@ -586,7 +586,13 @@ public class RayTracer {
 		v = v.normalize();
 		// Vector p0 = endPoint.add(v.mult(0.01)) ; ////////TODO/////////////set
 		// added value/////////////////////
-		Vector p0 = endPoint.add(OriginalShape.getNormal(endPoint).mult(0.001));
+		Vector norm = OriginalShape.getNormal(endPoint);
+		if(OriginalShape.getClass() == Triangle.class) {
+			if(norm.dot(v) < 0){
+				norm = norm.mult(-1);
+			}
+		}
+		Vector p0 = endPoint.add(norm.mult(0.001));
 		double t = p0.getDistanceScalar(licht.getPosition());
 		// System.out.println(t);
 		Ray rayOfLight = new Ray(t, p0, v);
