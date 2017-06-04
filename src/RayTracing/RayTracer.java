@@ -283,13 +283,10 @@ public class RayTracer {
 		int weight = this.imageWidth;
 		int height = this.imageHeight;
 
-		int p = 0;
 		for (int i = 0; i < weight; i++) {
 			for (int j = 0; j < height; j++) {
 				for (int k = 0; k < 3; k++) {
 					rgbData[(j * imageWidth + i) * 3 + k] = (byte) this.screen[i][j][k];
-					//rgbData[p] 
-					p++;
 				}
 			}
 		}
