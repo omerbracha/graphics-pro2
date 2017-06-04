@@ -591,17 +591,18 @@ public class RayTracer {
 
 		int softShadows = 1; // TODO
 		double[] ans = { 0, 0, 0 };
+		//Vector v = endPoint.sub(licht.getPosition());
 		Vector v = licht.getPosition().sub(endPoint);
 		v = v.normalize();
 		// Vector p0 = endPoint.add(v.mult(0.01)) ; ////////TODO/////////////set
 		// added value/////////////////////
 		Vector p0 = endPoint.add(OriginalShape.getNormal(endPoint).mult(0.001));
 		double t = p0.getDistanceScalar(licht.getPosition());
+		//System.out.println(t);
 		Ray rayOfLight = new Ray(t, p0, v);
 		Vector normal = OriginalShape.getNormal(endPoint);
-		Shape hitShape = new Shape() {
-		};
-		// double denominator = normal.x + normal.y*t + normal.z*t*t;
+		Shape hitShape = new Shape() {};
+		//double denominator = v.x + v.y*t + v.z*t*t;
 		int flag = 0;
 		ArrayList<Shape> shapes = new ArrayList<>();
 		for (Shape sh : this.scene.getShapes()) {
@@ -627,9 +628,9 @@ public class RayTracer {
 				ans[2] = licht.getB() * (1 - licht.getShadow() * shade);
 			}
 		} else { // no abstractions
-			ans[0] = licht.getR();// / denominator;
-			ans[1] = licht.getG();// / denominator;
-			ans[2] = licht.getB();// / denominator;
+			ans[0] = licht.getR() ;// / denominator;
+			ans[1] = licht.getG() ;// / denominator;
+			ans[2] = licht.getB() ;// / denominator;
 		}
 		
 		if (softShadows > 0) {
@@ -651,7 +652,8 @@ public class RayTracer {
 	private double getSoftShadowValue(ArrayList<Shape> shapes, Light licht, Ray rayOfLight, Vector endPoint) {
 		double shRays = (double) this.scene.getMySet().getSh_rays();
 		
-		// find a plane perpendicular to the ray 
+		// find a plane perpendicular to the ray
+		double shadowValue = licht.getShadow();
 		Vector p0 = licht.getPosition();
 		Vector normal = rayOfLight.getV().mult(-1); 
 		double d = -(p0.dot(normal));
@@ -681,7 +683,7 @@ public class RayTracer {
 				for(Shape shape: this.scene.getShapes()){
 						double newT = newRay.inter(shape);
 						if(( newT > 0) && ( newT <= t)){
-							cnt+= 1 - this.scene.getMaterials().get(shape.getMat_idx() - 1).getTrans();
+							cnt+= (shadowValue) * (1 - this.scene.getMaterials().get(shape.getMat_idx() - 1).getTrans());
 						//	break;
 						}
 				}
