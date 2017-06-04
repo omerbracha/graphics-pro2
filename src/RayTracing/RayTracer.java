@@ -549,10 +549,10 @@ public class RayTracer {
 				Ray newRay = new Ray(t, newP0, newV);
 
 				for (Shape shape : this.scene.getShapes()) { // iterate over shapes
-					if (shape.getClass() == Triangle.class) {
-						newRay.v = newRay.v.mult(-1);
-						newRay.p0 = licht.getPosition();
-					}
+//					if (shape.getClass() == Triangle.class) {
+//						newRay.v = newRay.v.mult(-1);
+//						newRay.p0 = licht.getPosition();
+//					}
 					double newT = newRay.inter(shape); // check for intersection
 					if ((newT > 0) && (newT <= t)) { // if intersection is closer
 
