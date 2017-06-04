@@ -259,7 +259,7 @@ public class RayTracer {
 		long startTime = System.currentTimeMillis();
 
 		// Create a byte array to hold the pixel data:
-		byte[] rgbData = new byte[this.imageWidth * this.imageHeight * 3];
+		byte[] rgbData = new byte[this.imageWidth * this.imageHeight * 3 ];
 
 		// Put your ray tracing code here!
 		//
@@ -273,8 +273,7 @@ public class RayTracer {
 		// 0-255
 
 		for (int i = 0; i < this.imageWidth; i++) { // run from top to bottom
-			for (int j = 0; j < this.imageHeight; j++) { // run from left to
-															// right
+			for (int j = 0; j < this.imageHeight; j++) { // run from left to right
 				// System.out.println(Integer.toString(i) + " " +
 				// Integer.toString(j));
 				this.screen[i][j] = getColorForPix(j, i);
@@ -284,13 +283,10 @@ public class RayTracer {
 		int weight = this.imageWidth;
 		int height = this.imageHeight;
 
-		int p = 0;
 		for (int i = 0; i < weight; i++) {
 			for (int j = 0; j < height; j++) {
 				for (int k = 0; k < 3; k++) {
 					rgbData[(j * imageWidth + i) * 3 + k] = (byte) this.screen[i][j][k];
-					// rgbData[p]
-					p++;
 				}
 			}
 		}
@@ -368,17 +364,19 @@ public class RayTracer {
 
 	private double[] sampleColorByRayRec(Ray inputRay, double t, double InRed, double InGreen, double InBlue, int rec,
 			Shape inputShape) {
-		int flag = 0;//h
+		int flag = 0;
+
 		MySet set = this.scene.getMySet();
 		double red = 0, green = 0, blue = 0;
 		Material mat = new Material();
-		if (rec == 0) {
-			red = set.getBgr();
-			green = set.getBgg();
-			blue = set.getBgb();
-			double[] ans_stopping = { red, green, blue };
-			return ans_stopping;
-		}
+
+			if (rec == 0) {
+				red = set.getBgr();
+				green = set.getBgg();
+				blue = set.getBgb();
+				double[] ans_stopping = { red, green, blue };
+				return ans_stopping;
+			}
 
 		// not ending
 		Shape shape = new Shape() {
