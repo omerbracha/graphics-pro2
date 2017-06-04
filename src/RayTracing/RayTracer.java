@@ -9,6 +9,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 // import javafx.scene.shape.Sphere;
 import javax.imageio.ImageIO;
 
@@ -667,9 +669,10 @@ public class RayTracer {
 //		upperLeftPoint = upperLeftPoint.add(right.mult(cellSize/2)).add(down.mult(cellSize/2)); 
 		
 		double cnt = 0;
+		Random r = new Random();
 		for (int i = 0; i < (int) shRays; i++) {
 			for (int j = 0; j < (int) shRays; j++) {
-				Vector p = upperLeftPoint.add(down.mult(i*cellSize)).add(right.mult(j*cellSize)); 
+				Vector p = upperLeftPoint.add(down.mult((i+r.nextDouble())*cellSize)).add(right.mult((j + r.nextDouble())*cellSize)); 
 				Vector newV = p.sub(endPoint).normalize();
 				double t = endPoint.getDistanceScalar(p); 
 				Vector newP0 = endPoint.add(newV.mult(0.00001));
@@ -679,7 +682,7 @@ public class RayTracer {
 						double newT = newRay.inter(shape);
 						if(( newT > 0) && ( newT <= t)){
 							cnt+= 1 - this.scene.getMaterials().get(shape.getMat_idx() - 1).getTrans();
-							break;
+						//	break;
 						}
 				}
 			}
