@@ -1,10 +1,8 @@
 package RayTracing;
 
 public class Sphere extends Shape{
-	//TODO check xyz int or double
 	public double cx, cy, cz; 	// center positions 
 	public double radius; 		// radius
-	//public int mat_idx;		// material index.
 	public int index;
 	/**
 	 * @return the index
@@ -85,7 +83,5 @@ public class Sphere extends Shape{
 		Vector n = p.sub(this.getPos());
 		n = n.normalize();
 		return n;
-	}
-	
-	
+	}	
 }

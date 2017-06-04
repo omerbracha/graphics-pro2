@@ -2,9 +2,6 @@ package RayTracing;
 
 public class Light {
 	public Vector position;
-//	public double px; 		//position of the light (x)
-//	public double py;		//position of the light (y)
-//	public double pz;		//position of the light (z)
 	public double r;	//light color (r)
 	public double g;	//light color (g)	
 	public double b;	//light color (b)

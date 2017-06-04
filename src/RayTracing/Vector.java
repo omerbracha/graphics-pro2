@@ -17,11 +17,11 @@ public class Vector {
 		this(0,0,0);
 	}
 	
-	public double dot(Vector other) {
+	public double dot(Vector other) { // dot product
 		return (this.x*other.x + this.y*other.y + this.z*other.z);
 	}
 	
-	public Vector cross(Vector other) {
+	public Vector cross(Vector other) { // cross product
 		Vector vec = new Vector();
 		vec.x = this.y*other.z - this.z*other.y;
 		vec.y = this.z*other.x - this.x*other.z;
@@ -34,7 +34,7 @@ public class Vector {
 		return size;
 	}
 	
-	public Vector normalize() {
+	public Vector normalize() { // normalize the vector
 		double size = this.getSize();
 		if (size == 0.0) {
 			return this;
@@ -43,7 +43,7 @@ public class Vector {
 		return vec;
 	}
 	
-	public Vector add(Vector other) {
+	public Vector add(Vector other) { // vector addition
 		Vector vec = new Vector();
 		vec.x = this.x + other.x;
 		vec.y = this.y + other.y;
@@ -51,7 +51,7 @@ public class Vector {
 		return vec;
 	}
 	
-	public Vector sub(Vector other) {
+	public Vector sub(Vector other) { // vector subtraction
 		Vector vec = new Vector();
 		vec.x = this.x - other.x;
 		vec.y = this.y - other.y;
@@ -59,7 +59,7 @@ public class Vector {
 		return vec;
 	}
 	
-	public Vector mult(double i) {
+	public Vector mult(double i) { // multiply by scalar
 		Vector V = new Vector();
 		V.x = this.x*i;
 		V.y = this.y*i;
@@ -67,7 +67,7 @@ public class Vector {
 		return V;
 	}
 	
-	public Vector div(double i) {
+	public Vector div(double i) { // divide by scalar
 		Vector V = new Vector();
 		V.x = this.x/i;
 		V.y = this.y/i;
@@ -75,31 +75,19 @@ public class Vector {
 		return V;
 	}
 
-	public double getDistanceScalar(Vector position) {
+	public double getDistanceScalar(Vector position) { // distance between two points
 		double x = Math.abs(this.x - position.x);
 		double y = Math.abs(this.y - position.y);
 		double z = Math.abs(this.z - position.z);
 		return Math.sqrt(x*x + y*y + z*z);
 	}
 
-	public Vector dotByPart(Vector that) {
+	public Vector dotByPart(Vector that) { // multiply vectors by parts
 		Vector ans = new Vector();
 		ans.x = this.x * that.x;
 		ans.y = this.y * that.y;
 		ans.z = this.z * that.z;
 		return ans;
 	}
-
-	public Vector perpendicular() {
-		//double x = this.y - this.z;
-		//double y = this.x;
-		//double z = -this.x;
-		//Vector ans = new Vector(x,y,z);
-		//return ans;
-		Vector ans = new Vector(0,0,1);
-		ans.cross(this);
-		return ans;
-	}
-
 
 }

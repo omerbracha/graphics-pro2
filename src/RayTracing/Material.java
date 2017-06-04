@@ -86,7 +86,4 @@ public class Material {
 	public void setTrans(double trans) {
 		this.trans = trans;
 	}
-	
-	
-	
 }

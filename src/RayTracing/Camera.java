@@ -3,9 +3,6 @@ package RayTracing;
 public class Camera {
 	
 	public Vector position, lookat, up;
-	//public double pX, pY, pZ; 	// positions
-	//public double laX, laY, laZ; // look at positions
-	//public int uvX, uvY, uvZ; 	// up vector
 	public double sc_dist; 		// screen distance from camera 
 	public int sw_from_cam;		// screen width from camera
 	public int index;

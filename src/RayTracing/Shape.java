@@ -148,22 +148,22 @@ public abstract class Shape {
 		// TODO Auto-generated method stub
 		
 	}
-	public Vector getNormal(Vector v) {
-		if (this.getClass() == Sphere.class) {
+	public Vector getNormal(Vector v) { // get normal from shape
+		if (this.getClass() == Sphere.class) { // shape is sphere
 			Sphere sph = (Sphere) this;
 			return sph.getNormal(v);
 		}
-		if (this.getClass() == Triangle.class) {
+		if (this.getClass() == Triangle.class) { // shape is triangle
 			Triangle trn = (Triangle) this;
 			return trn.getNormal(v);
 		}
-		if (this.getClass() == Plane.class) {
+		if (this.getClass() == Plane.class) { // shape is plane
 			Plane pln = (Plane) this;
 			return pln.getNormal(v);
 		}
 		return null;
 	}
-	public Vector getR(Vector endPoint, Vector vec) {
+	public Vector getR(Vector endPoint, Vector vec) { // get reflection vector
 		Vector d = endPoint.sub(vec);
 		Vector n = this.getNormal(endPoint);
 		Vector r = d.sub(n.mult(2 * d.dot(n)));
