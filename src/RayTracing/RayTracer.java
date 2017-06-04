@@ -25,7 +25,7 @@ public class RayTracer {
 	public int imageHeight;
 	public int cnt_mtl = 0, cnt_pln = 0, cnt_sph = 0, cnt_lgt = 0;
 	public Scene scene = new Scene();
-	private double[][][] screen; // TODO- change int?
+	private double[][][] screen; 
 
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size
@@ -424,7 +424,6 @@ public class RayTracer {
 			return ans_stopping;
 		}
 
-		//TODO check if relevantttttttttttttttttttttttttttttttttt
 		if (red < 0) {
 			red = 0;
 		}
