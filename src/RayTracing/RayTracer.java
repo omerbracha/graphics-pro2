@@ -485,6 +485,7 @@ public class RayTracer {
 		v = v.normalize();
 		Vector norm = OriginalShape.getNormal(endPoint); // shape normal
 		if(OriginalShape.getClass() == Triangle.class) { // check for correct direction
+			v = v.mult(-1);
 			if(norm.dot(v) < 0){
 				norm = norm.mult(-1);
 			}
@@ -543,8 +544,13 @@ public class RayTracer {
 				Ray newRay = new Ray(t, newP0, newV);
 
 				for (Shape shape : this.scene.getShapes()) { // iterate over shapes
+					if (shape.getClass() == Triangle.class) {
+						newRay.v = newRay.v.mult(-1);
+						newRay.p0 = licht.getPosition();
+					}
 					double newT = newRay.inter(shape); // check for intersection
 					if ((newT > 0) && (newT <= t)) { // if intersection is closer
+
 						double trans = this.scene.getMaterials().get(shape.getMat_idx() - 1).getTrans();
 						cnt += (shadowValue) * (1 - trans);
 						if (trans == 0) { // not transparent - full shadow
